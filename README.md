@@ -20,8 +20,9 @@ When you successfully installed the plugin, you'll see a INFO log in your consol
 ```yml
 Prefix: "&c&lEVENT&f&l »"
 EventServer: "event" # Your Bungeecord Event Server Name
+Duration: 300 # Events Duration In Seconds
 Messages:
-  NoPermission: "&cYou Dont Have Enough Permissions."
+  NoPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
   AlreadyStarted: "&cThere Is A Active Event."
   NoDescription: "&dA Normal Event Has Been Started. Use \"/Event Join\" To Participate."
   EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
