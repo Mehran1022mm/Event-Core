@@ -1,5 +1,5 @@
-![Java-badge](https://forthebadge.com/images/badges/made-with-java.svg)
-![Spigot-badge](https://user-images.githubusercontent.com/102294006/234592459-763d181e-43f1-47f2-972a-93b612bcb7fe.svg)
+[![Java-badge](https://forthebadge.com/images/badges/made-with-java.svg)](https://g.co/kgs/LhfxBU)
+[![Spigot-badge](https://user-images.githubusercontent.com/102294006/234592459-763d181e-43f1-47f2-972a-93b612bcb7fe.svg)](https://g.co/kgs/LhfxBU)
 
 
 ## ✨ Event-Core
