@@ -2,7 +2,7 @@
 ![built-for-spigot-mc](https://user-images.githubusercontent.com/102294006/234592459-763d181e-43f1-47f2-972a-93b612bcb7fe.svg)
 
 
-## ✨ Explosive Eggs
+## ✨ Event-Core
 A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC-1.19.4
 
 ## ⚙ How to install
