@@ -7,10 +7,12 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 
 ## ⚙ How to install
 Simply go to [The Spigot Page](https://www.spigotmc.org/resources/110088) and download the plugin for your server or compile the plugin by yourself.
-
 After installing just run the server, this should spawn a Event-Core folder in plugins folder
-
 When you successfully installed the plugin, you'll see a INFO log in your console that says the plugin has been enabled.
+
+## 💡 To Do List
+- [ ] Add GUI Inventories
+- [ ] Add Tab Completor
 
 ```
 - This application is under MIT License & you cant resell this plugin -
