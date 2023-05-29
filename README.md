@@ -3,8 +3,7 @@
 
 
 ## ✨ Event-Core
-A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC-1.19.4
-**Only JAVA 11 Or Above**
+A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
 
 ## ⚙ How to install
 Simply go to [The Spigot Page](https://www.spigotmc.org/resources/110088) and download the plugin for your server or compile the plugin by yourself.
