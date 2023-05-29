@@ -1,6 +1,7 @@
-[![Java-badge](https://forthebadge.com/images/badges/made-with-java.svg)](https://g.co/kgs/LhfxBU)
-[![Spigot-badge](https://user-images.githubusercontent.com/102294006/234592459-763d181e-43f1-47f2-972a-93b612bcb7fe.svg)](https://g.co/kgs/LhfxBU)
-
+<p align="center">
+     <!--<img width="252" src="https://user-images.githubusercontent.com/102294006/234592459-763d181e-43f1-47f2-972a-93b612bcb7fe.svg" alt="Built For SpigotMC">-->
+    <img width="200" src="https://forthebadge.com/images/badges/made-with-java.svg" alt="Made With Java">
+</p>
 
 <h1 align="center">✨ Event-Core</h1>
 A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
