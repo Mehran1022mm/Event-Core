@@ -11,8 +11,8 @@ After installing just run the server, this should spawn a Event-Core folder in p
 When you successfully installed the plugin, you'll see a INFO log in your console that says the plugin has been enabled.
 
 ## 💡 To Do List
-- [ ] Add GUI Inventories
-- [ ] Add Tab Completor
+- [x] Add GUI Inventories - 100%
+- [x] Add Tab Completor - 100%
 
 ```
 - This application is under MIT License & you cant resell this plugin -
