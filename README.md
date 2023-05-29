@@ -14,6 +14,8 @@ When you successfully installed the plugin, you'll see a INFO log in your consol
 ### 💡 To Do List
 - [x] Add GUI Inventories - 100%
 - [x] Add Tab Completor - 100%
+- [ ] Add Bstats Support
+- [ ] Add `/Event Kick` Command.
 
 ```
 - This application is under MIT License & you cant resell this plugin -
