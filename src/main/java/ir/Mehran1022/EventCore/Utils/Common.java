@@ -98,5 +98,4 @@ public class Common {
             Common.SendMessage(Player, "&cError When Trying To Send You To " + ServerName);
         }
     }
-    // public static void ShutDown () { Bukkit.shutdown(); }
 }
