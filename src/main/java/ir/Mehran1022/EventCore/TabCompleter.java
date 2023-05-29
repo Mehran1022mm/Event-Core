@@ -24,31 +24,24 @@
 
 package ir.Mehran1022.EventCore;
 
-import ir.Mehran1022.EventCore.Utils.Common;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-public final class Configuration {
+import java.util.ArrayList;
+import java.util.List;
 
-    public static String PREFIX;
-    public static String ALREADY_STARTED;
-    public static String NO_PERMISSION;
-    public static String NO_DESC;
-    public static String END;
-    public static String NO_EVENT;
-    public static String SERVER_NAME;
-    public static int DURATION;
-    public static void loadConfig() {
-        Main instance = Main.getInstance();
-        instance.reloadConfig();
-        FileConfiguration config = instance.getConfig();
-
-        PREFIX = Common.Color(config.getString("Prefix") + " ");
-        ALREADY_STARTED = Common.Color(config.getString("Messages.AlreadyStarted"));
-        NO_PERMISSION = Common.Color(config.getString("Messages.NoPermission"));
-        NO_DESC = Common.Color(config.getString("Messages.NoDescription"));
-        END = Common.Color(config.getString("Messages.EventEnd"));
-        NO_EVENT = Common.Color(config.getString("Messages.NoActiveEvent"));
-        SERVER_NAME = config.getString("EventServer");
-        DURATION = config.getInt("Duration");
+public class TabCompleter implements org.bukkit.command.TabCompleter {
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
+        List<String> ArrayList = new ArrayList<>();
+        if (args.length == 1) {
+            ArrayList.add("End");
+            ArrayList.add("Start");
+            ArrayList.add("Reload");
+        } else if (args.length == 2 ) {
+            ArrayList.add("Limited Time Event Started! Join Now.");
+        }
+        return ArrayList;
     }
 }

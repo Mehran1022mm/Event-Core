@@ -22,33 +22,34 @@
                                         SOFTWARE.
 */
 
-package ir.Mehran1022.EventCore;
+package ir.Mehran1022.EventCore.Listener;
 
-import ir.Mehran1022.EventCore.Utils.Common;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
-public final class Configuration {
+import java.util.Objects;
 
-    public static String PREFIX;
-    public static String ALREADY_STARTED;
-    public static String NO_PERMISSION;
-    public static String NO_DESC;
-    public static String END;
-    public static String NO_EVENT;
-    public static String SERVER_NAME;
-    public static int DURATION;
-    public static void loadConfig() {
-        Main instance = Main.getInstance();
-        instance.reloadConfig();
-        FileConfiguration config = instance.getConfig();
-
-        PREFIX = Common.Color(config.getString("Prefix") + " ");
-        ALREADY_STARTED = Common.Color(config.getString("Messages.AlreadyStarted"));
-        NO_PERMISSION = Common.Color(config.getString("Messages.NoPermission"));
-        NO_DESC = Common.Color(config.getString("Messages.NoDescription"));
-        END = Common.Color(config.getString("Messages.EventEnd"));
-        NO_EVENT = Common.Color(config.getString("Messages.NoActiveEvent"));
-        SERVER_NAME = config.getString("EventServer");
-        DURATION = config.getInt("Duration");
+public class InventoryClickListener implements Listener {
+    @EventHandler
+    public void OnInvClick (InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (Objects.requireNonNull(event.getCurrentItem()).getType().name().equals("EMERALD")) {
+            player.performCommand("event join");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("EMERALD_BLOCK")) {
+            player.performCommand("event start");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("REDSTONE_BLOCK")) {
+            player.performCommand("event end");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("GRINDSTONE")) {
+            player.performCommand("event reload");
+            player.closeInventory();
+        }
     }
 }

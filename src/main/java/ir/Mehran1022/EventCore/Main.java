@@ -24,8 +24,10 @@
 
 package ir.Mehran1022.EventCore;
 
-import ir.Mehran1022.FlameAPI.Core;
+import ir.Mehran1022.EventCore.Listener.InventoryClickListener;
+import ir.Mehran1022.EventCore.Utils.Common;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,11 +35,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import xyz.xenondevs.invui.gui.Gui;
+import xyz.xenondevs.invui.item.Item;
+import xyz.xenondevs.invui.item.builder.ItemBuilder;
+import xyz.xenondevs.invui.item.impl.SimpleItem;
+import xyz.xenondevs.invui.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class Main extends JavaPlugin implements Listener, CommandExecutor {
     public static Main instance;
@@ -50,19 +61,104 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor 
         instance = this;
         saveDefaultConfig();
         Configuration.loadConfig();
-        Core.RegisterEvent(this, this);
-        Core.RegisterCommand("event", this);
+        Common.RegisterEvent(this, this);
+        Common.RegisterCommand("event", this);
+        Common.RegisterEvent(new InventoryClickListener(), this);
+        Common.RegisterTabCompleter(new TabCompleter(), "event");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase("event")) {
-            return true;
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase("event")) { return true; }
+
+        if (args.length == 0) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (player.hasPermission("eventcore.admin")) {
+                    Item Border = new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE));
+
+                    ItemStack Emerald = new ItemStack(Material.EMERALD_BLOCK);
+                    ItemMeta Emerald_Meta = Emerald.getItemMeta();
+                    List<String> Emerald_Lore = new ArrayList<>();
+                    Emerald_Lore.add(Common.Color("&7Starts An Event With The Default Description."));
+                    Objects.requireNonNull(Emerald_Meta).setLore(Emerald_Lore);
+                    Emerald_Meta.setDisplayName(Common.Color("&aStart"));
+                    Emerald.setItemMeta(Emerald_Meta);
+
+                    ItemStack Redstone = new ItemStack(Material.REDSTONE_BLOCK);
+                    ItemMeta Redstone_Meta = Emerald.getItemMeta();
+                    List<String> Redstone_Lore = new ArrayList<>();
+                    Redstone_Lore.add(Common.Color("&7Closes The Active Event."));
+                    Objects.requireNonNull(Redstone_Meta).setLore(Redstone_Lore);
+                    Redstone_Meta.setDisplayName(Common.Color("&cEnd"));
+                    Redstone.setItemMeta(Redstone_Meta);
+
+                    ItemStack Grindstone = new ItemStack(Material.GRINDSTONE);
+                    ItemMeta Grindstone_Meta = Grindstone.getItemMeta();
+                    List<String> Grindstone_Lore = new ArrayList<>();
+                    Grindstone_Lore.add(Common.Color("&7Reloads The Configuration Files."));
+                    Objects.requireNonNull(Grindstone_Meta).setLore(Grindstone_Lore);
+                    Grindstone_Meta.setDisplayName(Common.Color("&dReload"));
+                    Grindstone.setItemMeta(Grindstone_Meta);
+
+                    Gui GUI = Gui.normal()
+                            .setStructure(
+                                    "# # # # # # # # #",
+                                    "# . . . . . . . #",
+                                    "# . - . . . + . #",
+                                    "# . . . ! . . . #",
+                                    "# # # # # # # # #")
+                            .addIngredient('#', Border)
+                            .addIngredient('-', Emerald)
+                            .addIngredient('+', Redstone)
+                            .addIngredient('!', Grindstone)
+                            .build();
+
+                    Window window = Window.single()
+                            .setViewer(player)
+                            .setTitle("Events - Admin View")
+                            .setGui(GUI)
+                            .build();
+
+                    window.open();
+
+                    return true;
+                } else {
+                    Item Border = new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE));
+
+                    ItemStack Emerald = new ItemStack(Material.EMERALD);
+                    ItemMeta Emerald_Meta = Emerald.getItemMeta();
+                    List<String> Emerald_Lore = new ArrayList<>();
+                    Emerald_Lore.add(Common.Color("&7Click To Join."));
+                    Objects.requireNonNull(Emerald_Meta).setLore(Emerald_Lore);
+                    Emerald_Meta.setDisplayName(Common.Color("&aJoin"));
+                    Emerald.setItemMeta(Emerald_Meta);
+
+                    Gui GUI = Gui.normal()
+                            .setStructure(
+                                    "# # # # # # # # #",
+                                    "# . . . . . . . #",
+                                    "# . . . - . . . #",
+                                    "# . . . . . . . #",
+                                    "# # # # # # # # #")
+                            .addIngredient('#', Border)
+                            .addIngredient('-', Emerald)
+                            .build();
+
+                    Window window = Window.single()
+                            .setViewer(player)
+                            .setTitle("Events")
+                            .setGui(GUI)
+                            .build();
+
+                    window.open();
+
+                    return true;
+                }
+            }
         }
-        if (args.length < 1) {
-            return true;
-        }
+
         if (args[0].equalsIgnoreCase("reload")) {
             long start = System.currentTimeMillis();
             if (!sender.hasPermission("eventcore.admin")) {
@@ -71,63 +167,63 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor 
             Configuration.loadConfig();
             long stop = System.currentTimeMillis();
             long time = stop - start;
-            Core.SendMessage(sender, Configuration.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
+            Common.SendMessage(sender, Configuration.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
         }
         if (!(sender instanceof Player)) {
-            Core.SendMessage(sender, "Only Players Allowed.");
+            Common.SendMessage(sender, "Only Players Allowed.");
             return true;
         }
         if (args[0].equalsIgnoreCase("start")) {
 
             if (!sender.hasPermission("eventcore.admin")) {
-                Core.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
                 return true;
             }
             if (Active) {
-                Core.SendMessage(sender, Configuration.PREFIX + Configuration.ALREADY_STARTED);
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.ALREADY_STARTED);
                 return true;
             }
             EventDesc = args.length > 1 ? String.join(" ", args).substring(6) : Configuration.NO_DESC;
             Active = true;
             Players.clear();
-            Bukkit.broadcastMessage(Core.Color(Configuration.PREFIX + EventDesc));
-            Core.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + Configuration.DURATION);
+            Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + EventDesc));
+            Common.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + Configuration.DURATION);
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     Active = false;
                     Players.clear();
-                    Bukkit.broadcastMessage(Core.Color(Configuration.PREFIX + Configuration.END));
+                    Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + Configuration.END));
                 }
             }.runTaskLater(this, Configuration.DURATION * 20L);
         }
         if (args[0].equalsIgnoreCase("join")) {
             if (!Active) {
-                Core.SendMessage(sender,Configuration.PREFIX + Configuration.NO_EVENT);
+                Common.SendMessage(sender,Configuration.PREFIX + Configuration.NO_EVENT);
                 return true;
             }
             Player Player = (org.bukkit.entity.Player) sender;
             if (Players.contains(Player)) {
-                Core.SendMessage(Player, Configuration.PREFIX + "&cAlready Connected.");
+                Common.SendMessage(Player, Configuration.PREFIX + "&cAlready Connected.");
             } else {
                 Players.add(Player);
-                Core.SendToAnotherServer(Player, Configuration.SERVER_NAME);
-                Bukkit.broadcastMessage(Core.Color(Configuration.PREFIX + "&b" + Player.getName() + "&f Has Joined The Event."));
+                Common.SendToAnotherServer(Player, Configuration.SERVER_NAME);
+                Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + "&b" + Player.getName() + "&f Has Joined The Event."));
             }
             return true;
         }
         if (args[0].equalsIgnoreCase("end")) {
             if (!sender.hasPermission("eventcore.admin")) {
-                Core.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
                 return true;
             }
             if (!Active) {
-                Core.SendMessage(sender, Configuration.PREFIX + Configuration.NO_EVENT);
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_EVENT);
                 return true;
             }
             Active = false;
             Players.clear();
-            Core.SendMessage(sender, Configuration.PREFIX + "&aClosed The Active Event.");
+            Common.SendMessage(sender, Configuration.PREFIX + "&aClosed The Active Event.");
         }
         return true;
     }
@@ -135,7 +231,7 @@ public final class Main extends JavaPlugin implements Listener, CommandExecutor 
     public void OnPlayerJoin (PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (Active) {
-            Core.SendMessage(player, Configuration.PREFIX + EventDesc);
+            Common.SendMessage(player, Configuration.PREFIX + EventDesc);
         }
     }
     public static Main getInstance () {
