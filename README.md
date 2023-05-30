@@ -35,6 +35,6 @@ Messages:
 ```
 
 ### 🏆 Product Banner
-[![Event-Core](https://github.com/Mehran1022mm/Event-Core/assets/102294006/f72147ab-54b0-471a-ac82-878289b0e885)](https://github.com/Mehran1022mm/Event-Core/Wiki)
+[![Event-Core](https://s8.uupload.ir/files/event-core_b2b8.png)](https://github.com/Mehran1022mm/Event-Core/Wiki)
 
 
