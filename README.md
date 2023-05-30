@@ -35,7 +35,6 @@ Messages:
 ```
 
 ### 🏆 Product Banner
-<p align="center">
-    <img width="200" src="https://s8.uupload.ir/files/event-core_b2b8.png" alt="event-Core">
-</p>
+![Event-Core](https://github.com/Mehran1022mm/Event-Core/assets/102294006/f72147ab-54b0-471a-ac82-878289b0e885)
+
 
