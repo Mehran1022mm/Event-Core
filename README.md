@@ -33,3 +33,9 @@ Messages:
   EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
   NoActiveEvent: "&cNo Events Are Currently Available."
 ```
+
+### 🏆 Product Banner
+<p align="center">
+    <img width="200" src="[https://forthebadge.com/images/badges/made-with-java.svg](https://github.com/Mehran1022mm/Event-Core/assets/102294006/6dadae09-0b4b-49c2-9d39-785b57e1fcfb)" alt="event-Core">
+</p>
+
