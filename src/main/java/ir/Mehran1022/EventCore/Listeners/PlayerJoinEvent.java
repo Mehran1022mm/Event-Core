@@ -22,32 +22,23 @@
                                         SOFTWARE.
 */
 
-package ir.Mehran1022.EventCore;
+package ir.Mehran1022.EventCore.Listeners;
 
-import ir.Mehran1022.EventCore.Commands.EventCommand;
-import ir.Mehran1022.EventCore.Listeners.InventoryClickListener;
-import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
+import ir.Mehran1022.EventCore.Configuration;
 import ir.Mehran1022.EventCore.Utils.Common;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public final class Main extends JavaPlugin {
-    public static Main instance;
-    @Override
-    public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
-        Configuration.loadConfig();
-        LoadThings();
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Metrics Metrics = new Metrics(this, 18612);
-    }
-    private void LoadThings () {
-        Common.RegisterEvent(new PlayerJoinEvent(), this);
-        Common.RegisterCommand("event", new EventCommand());
-        Common.RegisterEvent(new InventoryClickListener(), this);
-        Common.RegisterTabCompleter(new TabCompleter(), "event");
-    }
-    public static Main getInstance () {
-        return instance;
+import static ir.Mehran1022.EventCore.Commands.EventCommand.Active;
+import static ir.Mehran1022.EventCore.Commands.EventCommand.EventDesc;
+
+public class PlayerJoinEvent implements Listener {
+    @EventHandler
+    public void OnPlayerJoin (org.bukkit.event.player.PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (Active) {
+            Common.SendMessage(player, Configuration.PREFIX + EventDesc);
+        }
     }
 }

@@ -22,32 +22,34 @@
                                         SOFTWARE.
 */
 
-package ir.Mehran1022.EventCore;
+package ir.Mehran1022.EventCore.Listeners;
 
-import ir.Mehran1022.EventCore.Commands.EventCommand;
-import ir.Mehran1022.EventCore.Listeners.InventoryClickListener;
-import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
-import ir.Mehran1022.EventCore.Utils.Common;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
-public final class Main extends JavaPlugin {
-    public static Main instance;
-    @Override
-    public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
-        Configuration.loadConfig();
-        LoadThings();
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Metrics Metrics = new Metrics(this, 18612);
-    }
-    private void LoadThings () {
-        Common.RegisterEvent(new PlayerJoinEvent(), this);
-        Common.RegisterCommand("event", new EventCommand());
-        Common.RegisterEvent(new InventoryClickListener(), this);
-        Common.RegisterTabCompleter(new TabCompleter(), "event");
-    }
-    public static Main getInstance () {
-        return instance;
+import java.util.Objects;
+
+public class InventoryClickListener implements Listener {
+    @EventHandler
+    public void OnInvClick (InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (Objects.requireNonNull(event.getCurrentItem()).getType().name().equals("EMERALD")) {
+            player.performCommand("event join");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("EMERALD_BLOCK")) {
+            player.performCommand("event start");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("REDSTONE_BLOCK")) {
+            player.performCommand("event end");
+            player.closeInventory();
+        }
+        if (event.getCurrentItem().getType().name().equals("GRINDSTONE")) {
+            player.performCommand("event reload");
+            player.closeInventory();
+        }
     }
 }

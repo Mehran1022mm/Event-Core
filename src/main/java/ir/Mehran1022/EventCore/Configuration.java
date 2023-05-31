@@ -37,6 +37,7 @@ public final class Configuration {
     public static String NO_EVENT;
     public static String SERVER_NAME;
     public static int DURATION;
+    public static String BOSSBAR;
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
@@ -50,5 +51,6 @@ public final class Configuration {
         NO_EVENT = Common.Color(config.getString("Messages.NoActiveEvent"));
         SERVER_NAME = config.getString("EventServer");
         DURATION = config.getInt("Duration");
+        BOSSBAR = Common.Color(config.getString("Messages.Bossbar"));
     }
 }

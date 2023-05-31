@@ -7,3 +7,4 @@ Messages:
   NoDescription: "&dA Normal Event Has Been Started. Use \"/Event Join\" To Participate."
   EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
   NoActiveEvent: "&cNo Events Are Currently Available."
+  Bossbar: "&aJoin Now! &d[Desc]" # [Desc] -> Is A Specific Description Of The Event
