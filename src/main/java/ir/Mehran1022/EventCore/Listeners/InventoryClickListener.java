@@ -24,6 +24,8 @@
 
 package ir.Mehran1022.EventCore.Listeners;
 
+import ir.Mehran1022.EventCore.Configuration;
+import ir.Mehran1022.EventCore.Utils.Common;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,20 +38,23 @@ public class InventoryClickListener implements Listener {
     public void OnInvClick (InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (Objects.requireNonNull(event.getCurrentItem()).getType().name().equals("EMERALD")) {
-            player.performCommand("event join");
             player.closeInventory();
+            Common.Confirmation(player, Configuration.PREFIX + "You Are Going To Join An Event. Are you Sure??", "/event join");
         }
         if (event.getCurrentItem().getType().name().equals("EMERALD_BLOCK")) {
-            player.performCommand("event start");
             player.closeInventory();
+            if (!player.hasPermission("eventcore.admin")) { Common.SendMessage(player, Configuration.PREFIX + Configuration.NO_PERMISSION); return; }
+            Common.Confirmation(player, Configuration.PREFIX + "You Are Going To Start An Event. Are you Sure??", "/event start");
         }
         if (event.getCurrentItem().getType().name().equals("REDSTONE_BLOCK")) {
-            player.performCommand("event end");
             player.closeInventory();
+            if (!player.hasPermission("eventcore.admin")) { Common.SendMessage(player, Configuration.PREFIX + Configuration.NO_PERMISSION); return; }
+            Common.Confirmation(player, Configuration.PREFIX + "You Are Going To Close An Event. Are you Sure??", "/event end");
         }
         if (event.getCurrentItem().getType().name().equals("GRINDSTONE")) {
-            player.performCommand("event reload");
             player.closeInventory();
+            if (!player.hasPermission("eventcore.admin")) { Common.SendMessage(player, Configuration.PREFIX + Configuration.NO_PERMISSION); return; }
+            player.performCommand("event reload");
         }
     }
 }

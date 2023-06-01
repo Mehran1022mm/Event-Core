@@ -26,7 +26,7 @@ package ir.Mehran1022.EventCore.Utils;
 
 import ir.Mehran1022.EventCore.Main;
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -98,5 +98,13 @@ public class Common {
             Common.SendMessage(Player, "&cError When Trying To Send You To " + ServerName);
         }
     }
-    // public static void ShutDown () { Bukkit.shutdown(); }
+    public static void Confirmation (Player Player, String Message, String Command) {
+        TextComponent Confirm = new TextComponent(Common.Color(" &a[✔]"));
+        Confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click To Confirm.").create()));
+        Confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Command));
+        BaseComponent[] Text = new ComponentBuilder("").append(Message)
+                .append(Confirm)
+                .create();
+        Player.spigot().sendMessage(Text);
+    }
 }

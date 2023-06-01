@@ -145,10 +145,10 @@ public class EventCommand implements CommandExecutor {
                 }
             }
         }
-
         if (args[0].equalsIgnoreCase("reload")) {
             long start = System.currentTimeMillis();
             if (!sender.hasPermission("eventcore.admin")) {
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
                 return true;
             }
             Configuration.loadConfig();
