@@ -14,6 +14,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [ ] Add Title
 - [ ] Add `/Event Help` Command
 - [ ] Add Multi Server Announce
+- [ ] Update TabCompleter
 
 ```
 - This application is under MIT License & you cant resell this plugin -
