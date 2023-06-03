@@ -11,7 +11,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Add Tab Completor - 100%
 - [x] Add [Bstats](https://bstats.org/plugin/bukkit/Event-Core/18612) Support - 100%
 - [x] Add Confirmation System - 100%
-- [ ] Add Title
+- [x] Add Title - 100%
 - [ ] Add `/Event Help` Command
 - [ ] Add Multi Server Announce
 - [ ] Update TabCompleter
