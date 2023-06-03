@@ -38,6 +38,11 @@ public final class Configuration {
     public static String SERVER_NAME;
     public static int DURATION;
     public static String BOSSBAR;
+    public static String TITLE;
+    public static String SUBTITLE;
+    public static int FADEIN;
+    public static int STAY;
+    public static int FADEOUT;
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
@@ -52,5 +57,10 @@ public final class Configuration {
         SERVER_NAME = config.getString("EventServer");
         DURATION = config.getInt("Duration");
         BOSSBAR = Common.Color(config.getString("Messages.Bossbar"));
+        TITLE = Common.Color(config.getString("Titles.Title"));
+        SUBTITLE = Common.Color(config.getString("Titles.Subtitle"));
+        FADEIN = config.getInt("Titles.FadeIn");
+        FADEIN = config.getInt("Titles.Stay");
+        FADEIN = config.getInt("Titles.FadeOut");
     }
 }

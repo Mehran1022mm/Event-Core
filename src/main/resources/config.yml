@@ -8,3 +8,9 @@ Messages:
   EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
   NoActiveEvent: "&cNo Events Are Currently Available."
   Bossbar: "&aJoin Now! &d[Desc]" # [Desc] -> Is A Specific Description Of The Event
+Titles:
+  Title: "&cEvent Started!"
+  Subtitle: "&d/Event Join"
+  FadeIn: 10 # In Ticks
+  Stay: 20 # In Ticks
+  FadeOut: 10 # In Ticks

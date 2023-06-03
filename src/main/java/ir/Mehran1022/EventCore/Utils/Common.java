@@ -41,6 +41,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
 public class Common {
@@ -59,6 +60,9 @@ public class Common {
     }
     public static void SendMessage (CommandSender Player, String Message) {
         Player.sendMessage(Color(Message));
+    }
+    public static void SendTitle (Player Player, String Title, String SubTitle, int FadeIn,int Stay, int FadeOut) {
+        Player.sendTitle(Color(Title), Color(SubTitle), FadeIn, Stay, FadeOut);
     }
      public static void Ban (Player Player, String Reason) {
         String UserName = Player.getName();

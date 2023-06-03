@@ -160,6 +160,21 @@ public class EventCommand implements CommandExecutor {
             Common.SendMessage(sender, "Only Players Allowed.");
             return true;
         }
+        if (args[0].equalsIgnoreCase("help")) {
+            if (sender.hasPermission("eventcore.admin")) {
+                Common.SendMessage(sender, "- &bEvent-Core v1.0.3 ");
+                Common.SendMessage(sender, "   &a/Event &f- &cOpens Admin Panel.");
+                Common.SendMessage(sender, "   &a/Event Help &f- &cSends Help Message.");
+                Common.SendMessage(sender, "   &a/Event Join &f- &cSends You To Events Server.");
+                Common.SendMessage(sender, "   &a/Event End &f- &cCloses Any Open Event.");
+                Common.SendMessage(sender, "   &a/Event Reload &f- &cReloads Plugin Configuration File.");
+            } else {
+                Common.SendMessage(sender, "- &bEvent-Core v1.0.3 ");
+                Common.SendMessage(sender, "   &a/Event &f- &cOpens Player Panel.");
+                Common.SendMessage(sender, "   &a/Event Help &f- &cSends Help Message.");
+                Common.SendMessage(sender, "   &a/Event Join &f- &cSends You To Events Server.");
+            }
+        }
         if (args[0].equalsIgnoreCase("start")) {
 
             if (!sender.hasPermission("eventcore.admin")) {
@@ -177,6 +192,7 @@ public class EventCommand implements CommandExecutor {
             BossBar Bossbar = Bukkit.createBossBar(BossbarString, BarColor.RED, BarStyle.SOLID);
             Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + EventDesc));
             for (Player player : Bukkit.getOnlinePlayers()) {
+                Common.SendTitle(player, Configuration.TITLE, Configuration.SUBTITLE, Configuration.FADEIN, Configuration.STAY, Configuration.FADEOUT);
                 Bossbar.addPlayer(player);
             }
             Common.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + Configuration.DURATION + "Seconds.");

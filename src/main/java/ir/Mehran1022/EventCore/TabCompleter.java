@@ -39,8 +39,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             ArrayList.add("End");
             ArrayList.add("Start");
             ArrayList.add("Reload");
-        } else if (args.length == 2 ) {
-            ArrayList.add("Limited Time Event Started! Join Now.");
+            ArrayList.add("Help");
         }
         return ArrayList;
     }
