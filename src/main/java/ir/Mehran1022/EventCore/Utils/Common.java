@@ -48,7 +48,7 @@ public class Common {
     public static String Color (String Message) {
         return ChatColor.translateAlternateColorCodes('&', Message);
     }
-    // public static void Log (String Message) { Main.getInstance().getLogger().info(Color(Message)); }
+    public static void Log (String Message) { Main.getInstance().getServer().getConsoleSender().sendMessage((Color(Message))); }
     public static void RegisterEvent (Listener ListenerClass, Plugin PluginClass) {
         Main.getInstance().getServer().getPluginManager().registerEvents(ListenerClass, PluginClass);
     }
@@ -60,9 +60,6 @@ public class Common {
     }
     public static void SendMessage (CommandSender Player, String Message) {
         Player.sendMessage(Color(Message));
-    }
-    public static void SendTitle (Player Player, String Title, String SubTitle, int FadeIn,int Stay, int FadeOut) {
-        Player.sendTitle(Color(Title), Color(SubTitle), FadeIn, Stay, FadeOut);
     }
      public static void Ban (Player Player, String Reason) {
         String UserName = Player.getName();

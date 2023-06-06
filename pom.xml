@@ -65,6 +65,10 @@
             <id>xenondevs</id>
             <url>https://repo.xenondevs.xyz/releases</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -83,6 +87,12 @@
             <groupId>xyz.xenondevs.invui</groupId>
             <artifactId>inventory-access-r5</artifactId>
             <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -27,12 +27,14 @@ package ir.Mehran1022.EventCore.Commands;
 import ir.Mehran1022.EventCore.Configuration;
 import ir.Mehran1022.EventCore.Main;
 import ir.Mehran1022.EventCore.Utils.Common;
+import net.milkbowl.vault.economy.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,9 +51,9 @@ import xyz.xenondevs.invui.window.Window;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class EventCommand implements CommandExecutor {
-    private Main Plugin;
     public static Boolean Active = false;
     public static String EventDesc;
     public static List<Player> Players = new ArrayList<>();
@@ -190,10 +192,12 @@ public class EventCommand implements CommandExecutor {
             Players.clear();
             String BossbarString = Configuration.BOSSBAR.replace("[Desc]", EventDesc);
             BossBar Bossbar = Bukkit.createBossBar(BossbarString, BarColor.RED, BarStyle.SOLID);
+            Bossbar.setProgress(1.0);
             Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + EventDesc));
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                Common.SendTitle(player, Configuration.TITLE, Configuration.SUBTITLE, Configuration.FADEIN, Configuration.STAY, Configuration.FADEOUT);
-                Bossbar.addPlayer(player);
+
+            for (Player P : Bukkit.getOnlinePlayers()) {
+                Bossbar.addPlayer(P);
+                P.sendTitle(Common.Color(Configuration.TITLE), Common.Color(Configuration.SUBTITLE), Configuration.FADEIN, Configuration.STAY, Configuration.FADEOUT);
             }
             Common.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + Configuration.DURATION + "Seconds.");
 
@@ -205,7 +209,7 @@ public class EventCommand implements CommandExecutor {
                     Bossbar.removeAll();
                     Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + Configuration.END));
                 }
-            }.runTaskLater(Plugin, Configuration.DURATION * 20L);
+            }.runTaskLater(Main.getInstance(), Configuration.DURATION * 20L);
         }
         if (args[0].equalsIgnoreCase("join")) {
             if (!Active) {
@@ -217,6 +221,11 @@ public class EventCommand implements CommandExecutor {
                 Common.SendMessage(Player, Configuration.PREFIX + "&cAlready Connected.");
             } else {
                 Players.add(Player);
+                if (Main.EconomyPluginFound && Configuration.ENABLE_COST) {
+                    EconomyResponse Response = Main.getEconomy().withdrawPlayer(Player, Configuration.COST);
+                    Common.SendMessage(Player, Configuration.PREFIX + "This Event Subtracted " + Configuration.COST.toString() + "$ From Your Money. You Have " + Main.getEconomy().format(Response.balance) + "$ Now");
+                    System.out.println("Withdrew " + Configuration.COST + " From " + Player.getName());
+                }
                 Common.SendToAnotherServer(Player, Configuration.SERVER_NAME);
                 Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + "&b" + Player.getName() + "&f Has Joined The Event."));
             }

@@ -2,6 +2,7 @@ name: Event-Core
 version: '${project.version}'
 main: ir.Mehran1022.EventCore.Main
 api-version: 1.13
+softdepend:
+  - Vault
 commands:
   event:
-    usage: "/<command> <args>"

@@ -1,6 +1,9 @@
-Prefix: "&c&lEVENT&f&l »"
+Prefix: "&c&lEVENT&f&l »&r"
 EventServer: "event" # Your Bungeecord Event Server Name
 Duration: 300 # Events Duration In Seconds
+Cost:
+  Enabled: true # Withdraw Money From Players On Joining
+  Cost: 15.0
 Messages:
   NoPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
   AlreadyStarted: "&cThere Is A Active Event."

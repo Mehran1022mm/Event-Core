@@ -22,7 +22,7 @@
                                         SOFTWARE.
 */
 
-package ir.Mehran1022.EventCore;
+package ir.Mehran1022.EventCore.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,6 +38,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if (args.length == 1) {
             ArrayList.add("End");
             ArrayList.add("Start");
+            ArrayList.add("Join");
             ArrayList.add("Reload");
             ArrayList.add("Help");
         }

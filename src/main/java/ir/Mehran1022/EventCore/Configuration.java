@@ -36,13 +36,15 @@ public final class Configuration {
     public static String END;
     public static String NO_EVENT;
     public static String SERVER_NAME;
-    public static int DURATION;
+    public static Integer DURATION;
     public static String BOSSBAR;
     public static String TITLE;
     public static String SUBTITLE;
-    public static int FADEIN;
-    public static int STAY;
-    public static int FADEOUT;
+    public static Integer FADEIN;
+    public static Integer STAY;
+    public static Integer FADEOUT;
+    public static  Boolean ENABLE_COST;
+    public static Double COST;
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
@@ -60,7 +62,9 @@ public final class Configuration {
         TITLE = Common.Color(config.getString("Titles.Title"));
         SUBTITLE = Common.Color(config.getString("Titles.Subtitle"));
         FADEIN = config.getInt("Titles.FadeIn");
-        FADEIN = config.getInt("Titles.Stay");
-        FADEIN = config.getInt("Titles.FadeOut");
+        STAY = config.getInt("Titles.Stay");
+        FADEOUT = config.getInt("Titles.FadeOut");
+        ENABLE_COST = config.getBoolean("Cost.Enabled");
+        COST = config.getDouble("Cost.Cost");
     }
 }
