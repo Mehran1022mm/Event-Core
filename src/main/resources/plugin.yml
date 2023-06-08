@@ -4,5 +4,12 @@ main: ir.Mehran1022.EventCore.Main
 api-version: 1.13
 softdepend:
   - Vault
+  - Essentials
+libraries:
+  - com.github.MilkBowl:VaultAPI:1.7
 commands:
   event:
+    description: SlashEvent Command. Does Everything
+    aliases:
+      - Event-Core
+    usage: "Usage: /Event <Arg>"

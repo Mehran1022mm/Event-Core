@@ -24,8 +24,10 @@
 
 package ir.Mehran1022.EventCore.Commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,13 +37,31 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
         List<String> ArrayList = new ArrayList<>();
+        List<String> Args1 = new ArrayList<>();
         if (args.length == 1) {
-            ArrayList.add("End");
-            ArrayList.add("Start");
-            ArrayList.add("Join");
-            ArrayList.add("Reload");
-            ArrayList.add("Help");
+            if (sender.hasPermission("eventcore.admin")) {
+                ArrayList.add("Join");
+                ArrayList.add("End");
+                ArrayList.add("Start");
+                ArrayList.add("Block");
+                ArrayList.add("UnBlock");
+                ArrayList.add("Help");
+                ArrayList.add("Reload");
+                return ArrayList;
+            } else {
+                ArrayList.add("Join");
+                ArrayList.add("Help");
+                return ArrayList;
+            }
         }
-        return ArrayList;
+        if (args[1].length() >= 1) {
+            if (sender.hasPermission("eventcore.admin")) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Args1.add(player.getName());
+                }
+                return Args1;
+            }
+        }
+        return null;
     }
 }

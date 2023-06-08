@@ -11,6 +11,10 @@ Messages:
   EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
   NoActiveEvent: "&cNo Events Are Currently Available."
   Bossbar: "&aJoin Now! &d[Desc]" # [Desc] -> Is A Specific Description Of The Event
+  Offline: "&c[Player] Is Offline." # [Player] -> Is Specified Player In Args[1]
+  Block: "&aBlocked [Player] From Events."
+  Unblock: "&aUnblocked [Player] From Events."
+  Blocked: "&cYou Can't Join Because You Are Blocked By An Administrator."
 Titles:
   Title: "&cEvent Started!"
   Subtitle: "&d/Event Join"

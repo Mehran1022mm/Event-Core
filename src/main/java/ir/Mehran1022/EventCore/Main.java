@@ -30,20 +30,31 @@ import ir.Mehran1022.EventCore.Listeners.InventoryClickListener;
 import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
 import ir.Mehran1022.EventCore.Utils.Common;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public final class Main extends JavaPlugin {
 
     public static Main instance;
+
     private static Economy econ = null;
+
     public static boolean EconomyPluginFound = true;
+
+    public static FileConfiguration Config;
+
+    public static java.io.File File;
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
         Configuration.loadConfig();
+        BannedPlayers();
         LoadThings();
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         EconomyPluginFound = setupEconomy();
@@ -61,6 +72,13 @@ public final class Main extends JavaPlugin {
         Common.RegisterCommand("event", new EventCommand());
         Common.RegisterEvent(new InventoryClickListener(), this);
         Common.RegisterTabCompleter(new TabCompleter(), "event");
+    }
+    private void BannedPlayers () {
+        File = new File(getDataFolder(), "Banned.yml");
+        if (!File.exists()) {
+            saveResource("Banned.yml", false);
+        }
+        Config = YamlConfiguration.loadConfiguration(File);
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {

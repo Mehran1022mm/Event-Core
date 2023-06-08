@@ -30,21 +30,45 @@ import org.bukkit.configuration.file.FileConfiguration;
 public final class Configuration {
 
     public static String PREFIX;
+
     public static String ALREADY_STARTED;
+
     public static String NO_PERMISSION;
+
     public static String NO_DESC;
+
     public static String END;
+
     public static String NO_EVENT;
+
     public static String SERVER_NAME;
+
     public static Integer DURATION;
+
     public static String BOSSBAR;
+
     public static String TITLE;
+
     public static String SUBTITLE;
+
     public static Integer FADEIN;
+
     public static Integer STAY;
+
     public static Integer FADEOUT;
+
     public static  Boolean ENABLE_COST;
+
     public static Double COST;
+
+    public static String OFFLINE;
+
+    public static String BLOCK;
+
+    public static String BLOCKED;
+
+    public static String UNBLOCK;
+
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
@@ -66,5 +90,9 @@ public final class Configuration {
         FADEOUT = config.getInt("Titles.FadeOut");
         ENABLE_COST = config.getBoolean("Cost.Enabled");
         COST = config.getDouble("Cost.Cost");
+        OFFLINE = Common.Color(config.getString("Messages.Offline"));
+        BLOCK = Common.Color(config.getString("Messages.Block"));
+        UNBLOCK = Common.Color(config.getString("Messages.Unblock"));
+        BLOCKED = Common.Color(config.getString("Messages.Blocked"));
     }
 }

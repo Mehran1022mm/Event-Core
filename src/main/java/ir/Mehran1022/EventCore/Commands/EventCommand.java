@@ -27,14 +27,13 @@ package ir.Mehran1022.EventCore.Commands;
 import ir.Mehran1022.EventCore.Configuration;
 import ir.Mehran1022.EventCore.Main;
 import ir.Mehran1022.EventCore.Utils.Common;
-import net.milkbowl.vault.economy.*;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,14 +47,18 @@ import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.SimpleItem;
 import xyz.xenondevs.invui.window.Window;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class EventCommand implements CommandExecutor {
+
     public static Boolean Active = false;
+
     public static String EventDesc;
+
     public static List<Player> Players = new ArrayList<>();
 
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
@@ -164,12 +167,14 @@ public class EventCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("help")) {
             if (sender.hasPermission("eventcore.admin")) {
-                Common.SendMessage(sender, "- &bEvent-Core v1.0.3 ");
+                Common.SendMessage(sender, "- &bEvent-Core " + Main.getInstance().getDescription().getVersion());
                 Common.SendMessage(sender, "   &a/Event &f- &cOpens Admin Panel.");
                 Common.SendMessage(sender, "   &a/Event Help &f- &cSends Help Message.");
                 Common.SendMessage(sender, "   &a/Event Join &f- &cSends You To Events Server.");
                 Common.SendMessage(sender, "   &a/Event End &f- &cCloses Any Open Event.");
                 Common.SendMessage(sender, "   &a/Event Reload &f- &cReloads Plugin Configuration File.");
+                Common.SendMessage(sender, "   &a/Event Block <Player> &f- &cBlocks A Player.");
+                Common.SendMessage(sender, "   &a/Event UnBlock <Player> &f- &cUnBlocks A Player.");
             } else {
                 Common.SendMessage(sender, "- &bEvent-Core v1.0.3 ");
                 Common.SendMessage(sender, "   &a/Event &f- &cOpens Player Panel.");
@@ -217,6 +222,13 @@ public class EventCommand implements CommandExecutor {
                 return true;
             }
             Player Player = (org.bukkit.entity.Player) sender;
+            UUID uuid = Player.getUniqueId();
+            if (Main.Config.contains(uuid.toString())) {
+                if (Objects.equals(Main.Config.get(uuid.toString() + ".BANNED"), true)) {
+                    Common.SendMessage(Player,Configuration.PREFIX + Configuration.BLOCKED);
+                    return true;
+                }
+            }
             if (Players.contains(Player)) {
                 Common.SendMessage(Player, Configuration.PREFIX + "&cAlready Connected.");
             } else {
@@ -242,7 +254,58 @@ public class EventCommand implements CommandExecutor {
             }
             Active = false;
             Players.clear();
+            Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + Configuration.END));
             Common.SendMessage(sender, Configuration.PREFIX + "&aClosed The Active Event.");
+        }
+        if (args[0].equalsIgnoreCase("block")) {
+            if (!sender.hasPermission("eventcore.admin")) {
+                sender.sendMessage(Configuration.PREFIX + Configuration.NO_PERMISSION);
+                return true;
+            }
+            if (args[1].length() < 1) {
+                return true;
+            }
+            Player player = Bukkit.getPlayer(args[1]);
+            if (player == null) {
+                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.OFFLINE).replace("[Player]", args[1]));
+                return true;
+            }
+            String playerName = player.getName();
+            UUID uuid = player.getUniqueId();
+            if (Main.Config.contains(uuid.toString())) {
+                Main.Config.set(uuid.toString() + ".BANNED", true);
+                try {
+                    Main.Config.save(Main.File);
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.BLOCK).replace("[Player]", playerName));
+            }
+        }
+        if (args[0].equalsIgnoreCase("unblock")) {
+            if (!sender.hasPermission("eventcore.admin")) {
+                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                return true;
+            }
+            if (args[1].length() < 1) {
+                return true;
+            }
+            Player player = Bukkit.getPlayer(args[1]);
+            if (player == null) {
+                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.OFFLINE).replace("[Player]", args[1]));
+                return true;
+            }
+            String playerName = player.getName();
+            UUID uuid = player.getUniqueId();
+            if (Main.Config.contains(uuid.toString())) {
+                Main.Config.set(uuid.toString() + ".BANNED", false);
+                try {
+                    Main.Config.save(Main.File);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.UNBLOCK).replace("[Player]", playerName));
+            }
         }
         return true;
     }
