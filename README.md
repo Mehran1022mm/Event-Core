@@ -15,7 +15,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Add `/Event Help` Command - 100%
 - [x] Update TabCompleter - 100%
 - [x] Add Costs For Join -100%
-- [ ] Update Wiki Pages
+- [x] Update Wiki Pages - 100%
 - [ ] Add Block System - 80% Final Testing
 
 ```
