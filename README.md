@@ -16,7 +16,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Update TabCompleter - 100%
 - [x] Add Costs For Join -100%
 - [x] Update Wiki Pages - 100%
-- [ ] Add Block System - 80% Final Testing
+- [x] Add Block System - 100%
 
 ```
 - This application is under MIT License & you cant resell this plugin -
