@@ -18,7 +18,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Update Wiki Pages - 100%
 - [x] Add Block System - 100%
 - [ ] Add Gradient And Special Colors - 100%
-- [ ] Auto Update System
+- [ ] Add Auto Update System
 
 ```
 - This application is under MIT License & you cant resell this plugin -
