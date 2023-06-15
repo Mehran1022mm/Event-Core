@@ -24,7 +24,6 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [InvUI](https://github.com/NichtStudioCode/InvUI)
 - [VaultAPI](https://github.com/MilkBowl/VaultAPI)
 - [IridiumColorAPI](https://github.com/Iridium-Development/IridiumColorAPI)
-- [SQLApi](https://github.com/GaMeIsNtOvEr/SQLAPI)
 
 ```
 - This application is under MIT License & you cant resell this plugin -
