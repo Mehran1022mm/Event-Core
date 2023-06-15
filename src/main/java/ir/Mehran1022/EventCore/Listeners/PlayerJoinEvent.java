@@ -24,13 +24,12 @@
 
 package ir.Mehran1022.EventCore.Listeners;
 
-import ir.Mehran1022.EventCore.Configuration;
 import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
 import ir.Mehran1022.EventCore.Utils.Common;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import sun.jvm.hotspot.debugger.MachineDescriptionIntelX86;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -43,17 +42,17 @@ public class PlayerJoinEvent implements Listener {
     public void EventNotification (org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (Active) {
-            Common.SendMessage(player, Configuration.PREFIX + EventDesc);
+            Common.SendMessage(player, ConfigManager.PREFIX + EventDesc);
         }
     }
     @EventHandler
     public void DataSave (org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        Main.Config.set(uuid.toString() + ".NAME", player.getName());
-        Main.Config.set(uuid.toString() + ".BANNED", false);
+        Main.PlayersData.set(uuid.toString() + ".NAME", player.getName());
+        Main.PlayersData.set(uuid.toString() + ".BANNED", false);
         try {
-            Main.Config.save(Main.File);
+            Main.PlayersData.save(Main.File);
         } catch (IOException e) {
             e.printStackTrace();
         }

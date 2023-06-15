@@ -24,8 +24,8 @@
 
 package ir.Mehran1022.EventCore.Commands;
 
-import ir.Mehran1022.EventCore.Configuration;
 import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
 import ir.Mehran1022.EventCore.Utils.Common;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -36,6 +36,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -52,8 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-public class EventCommand implements CommandExecutor {
+public class EventCommand implements CommandExecutor, TabCompleter {
 
     public static Boolean Active = false;
 
@@ -61,6 +61,7 @@ public class EventCommand implements CommandExecutor {
 
     public static List<Player> Players = new ArrayList<>();
 
+    @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("event")) { return true; }
 
@@ -153,13 +154,13 @@ public class EventCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             long start = System.currentTimeMillis();
             if (!sender.hasPermission("eventcore.admin")) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
                 return true;
             }
-            Configuration.loadConfig();
+            ConfigManager.loadConfig();
             long stop = System.currentTimeMillis();
             long time = stop - start;
-            Common.SendMessage(sender, Configuration.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
+            Common.SendMessage(sender, ConfigManager.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
         }
         if (!(sender instanceof Player)) {
             Common.SendMessage(sender, "Only Players Allowed.");
@@ -185,26 +186,26 @@ public class EventCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("start")) {
 
             if (!sender.hasPermission("eventcore.admin")) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
                 return true;
             }
             if (Active) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.ALREADY_STARTED);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.ALREADY_STARTED);
                 return true;
             }
-            EventDesc = args.length > 1 ? String.join(" ", args).substring(6) : Configuration.NO_DESC;
+            EventDesc = args.length > 1 ? String.join(" ", args).substring(6) : ConfigManager.NO_DESC;
             Active = true;
             Players.clear();
-            String BossbarString = Configuration.BOSSBAR.replace("[Desc]", EventDesc);
+            String BossbarString = ConfigManager.BOSSBAR.replace("[Desc]", EventDesc);
             BossBar Bossbar = Bukkit.createBossBar(BossbarString, BarColor.RED, BarStyle.SOLID);
             Bossbar.setProgress(1.0);
-            Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + EventDesc));
+            Bukkit.broadcastMessage(Common.Color(ConfigManager.PREFIX + EventDesc));
 
             for (Player P : Bukkit.getOnlinePlayers()) {
                 Bossbar.addPlayer(P);
-                P.sendTitle(Common.Color(Configuration.TITLE), Common.Color(Configuration.SUBTITLE), Configuration.FADEIN, Configuration.STAY, Configuration.FADEOUT);
+                P.sendTitle(Common.Color(ConfigManager.TITLE), Common.Color(ConfigManager.SUBTITLE), ConfigManager.FADEIN, ConfigManager.STAY, ConfigManager.FADEOUT);
             }
-            Common.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + Configuration.DURATION + "Seconds.");
+            Common.SendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + ConfigManager.DURATION + "Seconds.");
 
             new BukkitRunnable() {
                 @Override
@@ -212,54 +213,54 @@ public class EventCommand implements CommandExecutor {
                     Active = false;
                     Players.clear();
                     Bossbar.removeAll();
-                    Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + Configuration.END));
+                    Bukkit.broadcastMessage(Common.Color(ConfigManager.PREFIX + ConfigManager.END));
                 }
-            }.runTaskLater(Main.getInstance(), Configuration.DURATION * 20L);
+            }.runTaskLater(Main.getInstance(), ConfigManager.DURATION * 20L);
         }
         if (args[0].equalsIgnoreCase("join")) {
             if (!Active) {
-                Common.SendMessage(sender,Configuration.PREFIX + Configuration.NO_EVENT);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_EVENT);
                 return true;
             }
             Player Player = (org.bukkit.entity.Player) sender;
             UUID uuid = Player.getUniqueId();
-            if (Main.Config.contains(uuid.toString())) {
-                if (Objects.equals(Main.Config.get(uuid.toString() + ".BANNED"), true)) {
-                    Common.SendMessage(Player,Configuration.PREFIX + Configuration.BLOCKED);
+            if (Main.PlayersData.contains(uuid.toString())) {
+                if (Objects.equals(Main.PlayersData.get(uuid.toString() + ".BANNED"), true)) {
+                    Common.SendMessage(Player, ConfigManager.PREFIX + ConfigManager.BLOCKED);
                     return true;
                 }
             }
             if (Players.contains(Player)) {
-                Common.SendMessage(Player, Configuration.PREFIX + "&cAlready Connected.");
+                Common.SendMessage(Player, ConfigManager.PREFIX + "&cAlready Connected.");
             } else {
                 Players.add(Player);
-                if (Main.EconomyPluginFound && Configuration.ENABLE_COST) {
-                    EconomyResponse Response = Main.getEconomy().withdrawPlayer(Player, Configuration.COST);
-                    Common.SendMessage(Player, Configuration.PREFIX + "This Event Subtracted " + Configuration.COST.toString() + "$ From Your Money. You Have " + Main.getEconomy().format(Response.balance) + "$ Now");
-                    System.out.println("Withdrew " + Configuration.COST + " From " + Player.getName());
+                if (Main.EconomyPluginFound && ConfigManager.ENABLE_COST) {
+                    EconomyResponse Response = Main.getEconomy().withdrawPlayer(Player, ConfigManager.COST);
+                    Common.SendMessage(Player, ConfigManager.PREFIX + "This Event Subtracted " + ConfigManager.COST.toString() + "$ From Your Money. You Have " + Main.getEconomy().format(Response.balance) + "$ Now");
+                    System.out.println("Withdrew " + ConfigManager.COST + " From " + Player.getName());
                 }
-                Common.SendToAnotherServer(Player, Configuration.SERVER_NAME);
-                Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + "&b" + Player.getName() + "&f Has Joined The Event."));
+                Common.SendToAnotherServer(Player, ConfigManager.SERVER_NAME);
+                Bukkit.broadcastMessage(Common.Color(ConfigManager.PREFIX + "&b" + Player.getName() + "&f Has Joined The Event."));
             }
             return true;
         }
         if (args[0].equalsIgnoreCase("end")) {
             if (!sender.hasPermission("eventcore.admin")) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
                 return true;
             }
             if (!Active) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_EVENT);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_EVENT);
                 return true;
             }
             Active = false;
             Players.clear();
-            Bukkit.broadcastMessage(Common.Color(Configuration.PREFIX + Configuration.END));
-            Common.SendMessage(sender, Configuration.PREFIX + "&aClosed The Active Event.");
+            Bukkit.broadcastMessage(Common.Color(ConfigManager.PREFIX + ConfigManager.END));
+            Common.SendMessage(sender, ConfigManager.PREFIX + "&aClosed The Active Event.");
         }
         if (args[0].equalsIgnoreCase("block")) {
             if (!sender.hasPermission("eventcore.admin")) {
-                sender.sendMessage(Configuration.PREFIX + Configuration.NO_PERMISSION);
+                sender.sendMessage(ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
                 return true;
             }
             if (args[1].length() < 1) {
@@ -267,24 +268,24 @@ public class EventCommand implements CommandExecutor {
             }
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
-                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.OFFLINE).replace("[Player]", args[1]));
+                Common.SendMessage(sender, ConfigManager.PREFIX + (ConfigManager.OFFLINE).replace("[Player]", args[1]));
                 return true;
             }
             String playerName = player.getName();
             UUID uuid = player.getUniqueId();
-            if (Main.Config.contains(uuid.toString())) {
-                Main.Config.set(uuid.toString() + ".BANNED", true);
+            if (Main.PlayersData.contains(uuid.toString())) {
+                Main.PlayersData.set(uuid.toString() + ".BANNED", true);
                 try {
-                    Main.Config.save(Main.File);
+                    Main.PlayersData.save(Main.File);
                 } catch (IOException e) {
                         e.printStackTrace();
                 }
-                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.BLOCK).replace("[Player]", playerName));
+                Common.SendMessage(sender, ConfigManager.PREFIX + (ConfigManager.BLOCK).replace("[Player]", playerName));
             }
         }
         if (args[0].equalsIgnoreCase("unblock")) {
             if (!sender.hasPermission("eventcore.admin")) {
-                Common.SendMessage(sender, Configuration.PREFIX + Configuration.NO_PERMISSION);
+                Common.SendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
                 return true;
             }
             if (args[1].length() < 1) {
@@ -292,21 +293,52 @@ public class EventCommand implements CommandExecutor {
             }
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
-                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.OFFLINE).replace("[Player]", args[1]));
+                Common.SendMessage(sender, ConfigManager.PREFIX + (ConfigManager.OFFLINE).replace("[Player]", args[1]));
                 return true;
             }
             String playerName = player.getName();
             UUID uuid = player.getUniqueId();
-            if (Main.Config.contains(uuid.toString())) {
-                Main.Config.set(uuid.toString() + ".BANNED", false);
+            if (Main.PlayersData.contains(uuid.toString())) {
+                Main.PlayersData.set(uuid.toString() + ".BANNED", false);
                 try {
-                    Main.Config.save(Main.File);
+                    Main.PlayersData.save(Main.File);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Common.SendMessage(sender, Configuration.PREFIX + (Configuration.UNBLOCK).replace("[Player]", playerName));
+                Common.SendMessage(sender, ConfigManager.PREFIX + (ConfigManager.UNBLOCK).replace("[Player]", playerName));
             }
         }
         return true;
+    }
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
+        List<String> ArrayList = new ArrayList<>();
+        List<String> Args1 = new ArrayList<>();
+        if (args.length == 1) {
+            if (sender.hasPermission("eventcore.admin")) {
+                ArrayList.add("Join");
+                ArrayList.add("End");
+                ArrayList.add("Start");
+                ArrayList.add("Block");
+                ArrayList.add("UnBlock");
+                ArrayList.add("Help");
+                ArrayList.add("Reload");
+                return ArrayList;
+            } else {
+                ArrayList.add("Join");
+                ArrayList.add("Help");
+                return ArrayList;
+            }
+        }
+        if (args[1].length() >= 1) {
+            if (!args[1].equalsIgnoreCase("Block") && !args[1].equalsIgnoreCase("UnBlock")) { return null; }
+            if (sender.hasPermission("eventcore.admin")) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Args1.add(player.getName());
+                }
+                return Args1;
+            }
+        }
+        return null;
     }
 }

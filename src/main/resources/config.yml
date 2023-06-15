@@ -1,9 +1,13 @@
+Update-Check: true # Checks For Available Update
+Auto-Update: false # Automatically Downloads Updates
 Prefix: "&c&lEVENT&f&l »&r"
 EventServer: "event" # Your Bungeecord Event Server Name
 Duration: 300 # Events Duration In Seconds
-Cost:
-  Enabled: true # Withdraw Money From Players On Joining
+Cost: # Withdraw Money From Players On Joining
+  Enabled: true
   Cost: 15.0
+
+## !!!! Visit https://github.com/Mehran1022mm/Event-Core/wiki For Gradient And Special Colors Usage !!!!
 Messages:
   NoPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
   AlreadyStarted: "&cThere Is A Active Event."
@@ -15,6 +19,8 @@ Messages:
   Block: "&aBlocked [Player] From Events."
   Unblock: "&aUnblocked [Player] From Events."
   Blocked: "&cYou Can't Join Because You Are Blocked By An Administrator."
+## !!!! Visit https://github.com/Mehran1022mm/Event-Core/wiki For Gradient And Special Colors Usage !!!!
+
 Titles:
   Title: "&cEvent Started!"
   Subtitle: "&d/Event Join"

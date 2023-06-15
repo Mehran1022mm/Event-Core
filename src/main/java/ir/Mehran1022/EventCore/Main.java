@@ -25,9 +25,10 @@
 package ir.Mehran1022.EventCore;
 
 import ir.Mehran1022.EventCore.Commands.EventCommand;
-import ir.Mehran1022.EventCore.Commands.TabCompleter;
 import ir.Mehran1022.EventCore.Listeners.InventoryClickListener;
 import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
+import ir.Mehran1022.EventCore.Managers.UpdateManager;
 import ir.Mehran1022.EventCore.Utils.Common;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,19 +46,18 @@ public final class Main extends JavaPlugin {
 
     public static boolean EconomyPluginFound = true;
 
-    public static FileConfiguration Config;
+    public static FileConfiguration PlayersData;
 
     public static java.io.File File;
 
     @Override
-    public void onEnable() {
+    public void onEnable () {
         instance = this;
         saveDefaultConfig();
-        Configuration.loadConfig();
-        BannedPlayers();
-        LoadThings();
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        EconomyPluginFound = setupEconomy();
+        ConfigManager.loadConfig();
+        if (!CompatibleVersion()) {
+            getServer().getPluginManager().disablePlugin(this);
+        }
         if (!EconomyPluginFound) {
             if (getServer().getPluginManager().getPlugin("Vault") == null) {
                 Common.Log("&c[Event-Core] Can't Use Cost Feature. Vault Not Found.");
@@ -65,20 +65,37 @@ public final class Main extends JavaPlugin {
                 Common.Log("&c[Event-Core] Can't Use Cost Feature. Failed To Get Economy Plugin.");
             }
         }
-        Metrics Metrics = new Metrics(this, 18612);
+        LoadThings();
     }
+    /**
+     * @Override
+     * public void onDisable () { }
+     */
     private void LoadThings () {
+        PlayersData();
         Common.RegisterEvent(new PlayerJoinEvent(), this);
         Common.RegisterCommand("event", new EventCommand());
         Common.RegisterEvent(new InventoryClickListener(), this);
-        Common.RegisterTabCompleter(new TabCompleter(), "event");
+        Common.RegisterTabCompleter(new EventCommand(), "event");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        EconomyPluginFound = setupEconomy();
+        UpdateManager UM = new UpdateManager(); UM.Start();
+        Metrics Metrics = new Metrics(this, 18612);
     }
-    private void BannedPlayers () {
-        File = new File(getDataFolder(), "Banned.yml");
+    private void PlayersData () {
+        File = new File(getDataFolder(), "PlayersData.yml");
         if (!File.exists()) {
-            saveResource("Banned.yml", false);
+            saveResource("PlayersData.yml", false);
         }
-        Config = YamlConfiguration.loadConfiguration(File);
+        PlayersData = YamlConfiguration.loadConfiguration(File);
+    }
+    private Boolean CompatibleVersion () {
+        String Ver = getServer().getVersion();
+        if (!Ver.contains("1.16") && !Ver.contains("1.17") && !Ver.contains("1.18") && Ver.contains("1.19") && !Ver.contains("1.20")) {
+            Common.Log("Incompatible Version, Please Use 1.16.x And Above.");
+            return false;
+        }
+        return true;
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -91,7 +108,7 @@ public final class Main extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
     public static Economy getEconomy () {
         return econ;

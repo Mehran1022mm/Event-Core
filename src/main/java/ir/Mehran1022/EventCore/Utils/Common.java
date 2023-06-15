@@ -24,12 +24,12 @@
 
 package ir.Mehran1022.EventCore.Utils;
 
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import ir.Mehran1022.EventCore.Main;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -45,9 +45,9 @@ import java.util.Objects;
 
 public class Common {
     public static String Color (String Message) {
-        return ChatColor.translateAlternateColorCodes('&', Message);
+        return IridiumColorAPI.process(Message);
     }
-    public static void Log (String Message) { Main.getInstance().getServer().getConsoleSender().sendMessage((Color(Message))); }
+    public static void Log (String Message) { Main.getInstance().getServer().getConsoleSender().sendMessage("[Event-Core] " + Color(Message)); }
     public static void RegisterEvent (Listener ListenerClass, Plugin PluginClass) {
         Main.getInstance().getServer().getPluginManager().registerEvents(ListenerClass, PluginClass);
     }
