@@ -77,7 +77,8 @@ public final class Main extends JavaPlugin {
         Common.RegisterCommand("event", new EventCommand());
         Common.RegisterEvent(new InventoryClickListener(), this);
         Common.RegisterTabCompleter(new EventCommand(), "event");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "EventCore");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "EventCoreMessage");
         EconomyPluginFound = setupEconomy();
         UpdateManager UM = new UpdateManager(); UM.Start();
         Metrics Metrics = new Metrics(this, 18612);

@@ -91,11 +91,23 @@ public class Common {
             DataOutputStream out = new DataOutputStream(b);
             out.writeUTF("Connect");
             out.writeUTF(ServerName);
-            Player.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
+            Player.sendPluginMessage(Main.getInstance(), "EventCore", b.toByteArray());
             b.close();
             out.close();
         } catch (Exception e) {
             Common.SendMessage(Player, "&cError When Trying To Send You To " + ServerName);
+            e.printStackTrace();
+        }
+    }
+    public static void SendMessageToBungee (String Message) {
+        try {
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(b);
+            out.writeUTF(Color(Message));
+            Bukkit.getServer().sendPluginMessage(Main.getInstance(), "EventCoreMessage", b.toByteArray());
+        } catch (Exception e) {
+            Common.Log("&cError When Trying To Send Message To Bungee");
+            e.printStackTrace();
         }
     }
     public static void Confirmation (Player Player, String Message, String Command) {

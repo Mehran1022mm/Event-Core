@@ -200,7 +200,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             BossBar Bossbar = Bukkit.createBossBar(BossbarString, BarColor.RED, BarStyle.SOLID);
             Bossbar.setProgress(1.0);
             Bukkit.broadcastMessage(Common.Color(ConfigManager.PREFIX + EventDesc));
-
+            Common.SendMessageToBungee(ConfigManager.PREFIX + EventDesc);
             for (Player P : Bukkit.getOnlinePlayers()) {
                 Bossbar.addPlayer(P);
                 P.sendTitle(Common.Color(ConfigManager.TITLE), Common.Color(ConfigManager.SUBTITLE), ConfigManager.FADEIN, ConfigManager.STAY, ConfigManager.FADEOUT);
