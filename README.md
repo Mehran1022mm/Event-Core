@@ -8,7 +8,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 
 #### 📢 Bungeecord Addon Is Out! Download It Now
 [Event-Core-Bungee
-](https://github.com/Mehran1022mm/Event-Core-Bungee)
+](https://github.com/Mehran1022mm/Event-Core-Bungee) - Require 1.0.5 Or Above
 ### 💡 To Do List
 - [x] Add GUI Inventories - 100%
 - [x] Add Tab Completor - 100%
