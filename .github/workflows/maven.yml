@@ -34,4 +34,4 @@ jobs:
       with:
           name: Event-Core
           path: |
-            Build/*.jar
+            target/*.jar
