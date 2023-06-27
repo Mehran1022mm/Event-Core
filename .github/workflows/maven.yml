@@ -27,5 +27,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build
       run: mvn -B package --file pom.xml
+    - name: Upload
+      uses: "actions/upload-artifact@v3.1.2"
+      with:
+          name: Event-Core
+          path: |
+            Build/*.jar
