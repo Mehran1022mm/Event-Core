@@ -55,9 +55,7 @@ public final class Main extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         ConfigManager.loadConfig();
-        if (!CompatibleVersion()) {
-            getServer().getPluginManager().disablePlugin(this);
-        }
+        PlayersData();
         if (!EconomyPluginFound) {
             if (getServer().getPluginManager().getPlugin("Vault") == null) {
                 Common.Log("&c[Event-Core] Can't Use Cost Feature. Vault Not Found.");
@@ -72,16 +70,15 @@ public final class Main extends JavaPlugin {
      * public void onDisable () { }
      */
     private void LoadThings () {
-        PlayersData();
         Common.RegisterEvent(new PlayerJoinEvent(), this);
         Common.RegisterCommand("event", new EventCommand());
         Common.RegisterEvent(new InventoryClickListener(), this);
         Common.RegisterTabCompleter(new EventCommand(), "event");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "EventCore");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "EventCoreMessage");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:message");
         EconomyPluginFound = setupEconomy();
         UpdateManager UM = new UpdateManager(); UM.Start();
-        Metrics Metrics = new Metrics(this, 18612);
+        new Metrics(this, 18612);
     }
     private void PlayersData () {
         File = new File(getDataFolder(), "PlayersData.yml");
@@ -89,14 +86,6 @@ public final class Main extends JavaPlugin {
             saveResource("PlayersData.yml", false);
         }
         PlayersData = YamlConfiguration.loadConfiguration(File);
-    }
-    private Boolean CompatibleVersion () {
-        String Ver = getServer().getVersion();
-        if (!Ver.contains("1.16") && !Ver.contains("1.17") && !Ver.contains("1.18") && Ver.contains("1.19") && !Ver.contains("1.20")) {
-            Common.Log("Incompatible Version, Please Use 1.16.x And Above.");
-            return false;
-        }
-        return true;
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {

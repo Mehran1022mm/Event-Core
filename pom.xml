@@ -6,7 +6,7 @@
 
     <groupId>ir</groupId>
     <artifactId>Event-Core</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6-DEV</version>
     <packaging>jar</packaging>
 
     <name>Event-Core</name>
