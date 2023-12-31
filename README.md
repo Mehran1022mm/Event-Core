@@ -23,7 +23,7 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Add Gradient And Special Colors - 100%
 - [x] Add Auto Update System - 100%
 - [x] Create Bungeecord Addon & Add MultiServer Messaging - 100%
-- [ ] InventoryClick Handler Error Fix
+- [x] InventoryClick Handler Error Fix
 
 # ❓ Bungeecord addon is out of service for now.
 
