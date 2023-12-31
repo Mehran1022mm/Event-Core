@@ -1,6 +1,6 @@
 name: Event-Core
 version: '${project.version}'
-main: ir.mehran1022.eventcore.Main
+main: ir.Mehran1022.EventCore.Main
 api-version: 1.13
 softdepend:
   - Vault
@@ -9,6 +9,5 @@ commands:
   event:
     description: SlashEvent Command. Does Everything
     aliases:
-      - event-core
-      - ec
-    usage: "Usage: /ec help"
+      - Event-Core
+    usage: "Usage: /Event <Arg>"

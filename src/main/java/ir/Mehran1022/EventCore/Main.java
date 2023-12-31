@@ -1,36 +1,13 @@
-/*
-                                MIT License
+package ir.mehran1022.eventcore;
 
-                        Copyright (c) 2023 Mehran1022
-
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-               furnished to do so, subject to the following conditions:
-
-        The above copyright notice and this permission notice shall be included in all
-                    copies or substantial portions of the Software.
-
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                                        SOFTWARE.
-*/
-
-package ir.Mehran1022.EventCore;
-
-import ir.Mehran1022.EventCore.Commands.EventCommand;
-import ir.Mehran1022.EventCore.Listeners.InventoryClickListener;
-import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
-import ir.Mehran1022.EventCore.Managers.ConfigManager;
-import ir.Mehran1022.EventCore.Managers.UpdateManager;
-import ir.Mehran1022.EventCore.Utils.Common;
+import ir.mehran1022.eventcore.Commands.EventCommand;
+import ir.mehran1022.eventcore.Listeners.PlayerJoinEvent;
+import ir.mehran1022.eventcore.Managers.ConfigManager;
+import ir.mehran1022.eventcore.Managers.InventoryManager;
+import ir.mehran1022.eventcore.Managers.UpdateManager;
+import ir.mehran1022.eventcore.Utils.Common;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -40,70 +17,78 @@ import java.io.File;
 
 public final class Main extends JavaPlugin {
 
-    public static Main instance;
-
+    private static Main instance;
     private static Economy econ = null;
-
-    public static boolean EconomyPluginFound = true;
-
-    public static FileConfiguration PlayersData;
-
-    public static java.io.File File;
+    public static boolean economyPluginFound = true;
+    public static FileConfiguration playersData;
+    public static File file;
 
     @Override
-    public void onEnable () {
+    public void onEnable() {
         instance = this;
         saveDefaultConfig();
         ConfigManager.loadConfig();
-        PlayersData();
-        if (!EconomyPluginFound) {
-            if (getServer().getPluginManager().getPlugin("Vault") == null) {
-                Common.Log("&c[Event-Core] Can't Use Cost Feature. Vault Not Found.");
+        loadPlayersData();
+        if (!economyPluginFound) {
+            if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+                Common.log("&cCan't Use Cost Feature. Vault Not Found.");
             } else {
-                Common.Log("&c[Event-Core] Can't Use Cost Feature. Failed To Get Economy Plugin.");
+                Common.log("&cCan't Use Cost Feature. Failed To Get Economy Plugin.");
+                getConfig().set("Cost.Enabled", false);
             }
         }
-        LoadThings();
+        loadThings();
+        Common.log("&eBungeecord addon is disabled in this version because of major bugs. We recommend to remove it from your bungeecord server until we fix it!");
     }
-    /**
-     * @Override
-     * public void onDisable () { }
-     */
-    private void LoadThings () {
-        Common.RegisterEvent(new PlayerJoinEvent(), this);
-        Common.RegisterCommand("event", new EventCommand());
-        Common.RegisterEvent(new InventoryClickListener(), this);
-        Common.RegisterTabCompleter(new EventCommand(), "event");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:message");
-        EconomyPluginFound = setupEconomy();
-        UpdateManager UM = new UpdateManager(); UM.Start();
+
+    private void loadThings() {
+        Common.registerEvent(new PlayerJoinEvent(), this);
+        Common.registerCommand("event", new EventCommand());
+        Common.registerEvent(new InventoryManager(), this);
+        Common.registerTabCompleter(new EventCommand(), "event");
+/*
+        try {
+            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
+            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:message");
+        } catch (Exception e) {
+            Common.log("&cCannot register out-going channels: " + e.getMessage());
+        }
+*/
+        economyPluginFound = setupEconomy();
+        UpdateManager.start();
         new Metrics(this, 18612);
     }
-    private void PlayersData () {
-        File = new File(getDataFolder(), "PlayersData.yml");
-        if (!File.exists()) {
-            saveResource("PlayersData.yml", false);
-        }
-        PlayersData = YamlConfiguration.loadConfiguration(File);
+
+    @Override
+    public void onDisable() {
+        UpdateManager.stop();
     }
+
+    private void loadPlayersData() {
+        file = new File(getDataFolder(), "playersData.yml");
+        if (!file.exists()) {
+            saveResource("playersData.yml", false);
+        }
+        playersData = YamlConfiguration.loadConfiguration(file);
+    }
+
     private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            System.out.println("Vault Is Null.");
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            System.out.println("RegisteredServiceProvider IS Null.");
             return false;
         }
         econ = rsp.getProvider();
         return true;
     }
-    public static Economy getEconomy () {
+
+    public static Economy getEconomy() {
         return econ;
     }
-    public static Main getInstance () {
+
+    public static Main getInstance() {
         return instance;
     }
 }
