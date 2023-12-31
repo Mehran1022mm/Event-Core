@@ -6,8 +6,6 @@
 <h1 align="center">✨ Event-Core</h1>
 A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
 
-### 😔 Currently not wotking on this
-
 #### 📢 Bungeecord Addon Is Out! Download It Now
 [Event-Core-Bungee
 ](https://github.com/Mehran1022mm/Event-Core-Bungee) - Require 1.0.5 Or Above
@@ -26,9 +24,8 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Add Auto Update System - 100%
 - [x] Create Bungeecord Addon & Add MultiServer Messaging - 100%
 - [ ] InventoryClick Handler Error Fix
-- [ ] Bungee Channel Exception Handler
-- [ ] No Bungee Addon Handler
-- [ ] Update No Description Section To `String List` With Seprated Lines
+
+# ❓ Bungeecord addon is out of service for now.
 
 ### 🔗 Libraries
 - [InvUI](https://github.com/NichtStudioCode/InvUI)
