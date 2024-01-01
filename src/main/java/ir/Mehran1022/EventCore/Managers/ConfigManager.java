@@ -34,7 +34,7 @@ public final class ConfigManager {
 
     public static Integer FADEOUT;
 
-    public static  Boolean ENABLE_COST;
+    public static  boolean ENABLE_COST;
 
     public static Double COST;
 
@@ -46,37 +46,46 @@ public final class ConfigManager {
 
     public static String UNBLOCK;
 
-    public static Boolean AUTOUPDATE;
+    public static boolean AUTOUPDATE;
 
-    public static Boolean CHECKUPDATE;
+    public static boolean CHECKUPDATE;
+
+    public static boolean DEBUG;
+
+    public static String CONFIRMATION;
 
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
         FileConfiguration config = instance.getConfig();
 
-        PREFIX = Common.color(config.getString("Prefix") + " ");
-        ALREADY_STARTED = Common.color(config.getString("Messages.AlreadyStarted"));
-        NO_PERMISSION = Common.color(config.getString("Messages.NoPermission"));
-        NO_DESC = Common.color(config.getString("Messages.NoDescription"));
-        END = Common.color(config.getString("Messages.EventEnd"));
-        NO_EVENT = Common.color(config.getString("Messages.NoActiveEvent"));
-        SERVER_NAME = config.getString("EventServer");
-        DURATION = config.getInt("Duration");
-        BOSSBAR = Common.color(config.getString("Messages.Bossbar"));
-        TITLE = Common.color(config.getString("Titles.Title"));
-        SUBTITLE = Common.color(config.getString("Titles.Subtitle"));
-        FADEIN = config.getInt("Titles.FadeIn");
-        STAY = config.getInt("Titles.Stay");
-        FADEOUT = config.getInt("Titles.FadeOut");
-        ENABLE_COST = config.getBoolean("Cost.Enabled");
-        COST = config.getDouble("Cost.Cost");
-        OFFLINE = Common.color(config.getString("Messages.Offline"));
-        BLOCK = Common.color(config.getString("Messages.Block"));
-        UNBLOCK = Common.color(config.getString("Messages.Unblock"));
-        BLOCKED = Common.color(config.getString("Messages.Blocked"));
-        AUTOUPDATE = config.getBoolean("Auto-Update");
-        CHECKUPDATE = config.getBoolean("Check-Update");
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Loaded config.yml");
+        }
+
+        PREFIX = Common.color(config.getString("prefix") + " ");
+        ALREADY_STARTED = Common.color(config.getString("messages.alreadyStarted"));
+        NO_PERMISSION = Common.color(config.getString("messages.noPermission"));
+        NO_DESC = Common.color(config.getString("messages.noDescription"));
+        END = Common.color(config.getString("messages.eventEnd"));
+        NO_EVENT = Common.color(config.getString("messages.noActiveEvent"));
+        SERVER_NAME = config.getString("event-server");
+        DURATION = config.getInt("duration");
+        BOSSBAR = Common.color(config.getString("messages.bossbar"));
+        TITLE = Common.color(config.getString("titles.title"));
+        SUBTITLE = Common.color(config.getString("titles.subtitle"));
+        FADEIN = config.getInt("titles.fade-in");
+        STAY = config.getInt("titles.stay");
+        FADEOUT = config.getInt("titles.fade-out");
+        ENABLE_COST = config.getBoolean("cost.enabled");
+        COST = config.getDouble("cost.cost");
+        OFFLINE = Common.color(config.getString("messages.offline"));
+        BLOCK = Common.color(config.getString("messages.block"));
+        UNBLOCK = Common.color(config.getString("messages.unblock"));
+        BLOCKED = Common.color(config.getString("messages.blocked"));
+        CHECKUPDATE = config.getBoolean("update-check");
+        DEBUG = config.getBoolean("debug-mode");
+        CONFIRMATION = config.getString("messages.confirmation");
 
     }
 }

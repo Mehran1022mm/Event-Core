@@ -27,6 +27,9 @@ public final class UpdateManager {
     }
 
     private static void checkForUpdates() {
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Checking for updates.");
+        }
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(String.format(RESOURCE_URL, resourceId)).openConnection();
             connection.setRequestMethod("GET");

@@ -1,29 +1,30 @@
-Update-Check: true # Checks For Available Update
-Auto-Update: false # Automatically Downloads Updates
-Prefix: "&c&lEVENT&f&l »&r"
-EventServer: "event" # Your Bungeecord Event Server Name
-Duration: 300 # Events Duration In Seconds
-Cost: # Withdraw Money From Players On Joining
-  Enabled: true
-  Cost: 15.0
+update-check: true # Checks for available update
+debug-mode: false # Significant for troubleshot
+prefix: "&a&l☘ &2Event &7»&r" # Plugin main prefix - space automatically applies
+event-server: "event" # Your bungeecord event server name
+duration: 300 # Events duration in seconds
+cost: # Withdraw money from players on joining
+  enabled: true
+  cost: 15.0
 
 ## !!!! Visit https://github.com/Mehran1022mm/Event-Core/wiki For Gradient And Special Colors Usage !!!!
-Messages:
-  NoPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
-  AlreadyStarted: "&cThere Is A Active Event."
-  NoDescription: "&dA Normal Event Has Been Started. Use \"/Event Join\" To Participate."
-  EventEnd: "&dEvent Has Been Ended. No One Can Join Now."
-  NoActiveEvent: "&cNo Events Are Currently Available."
-  Bossbar: "&aJoin Now! &d[Desc]" # [Desc] -> Is A Specific Description Of The Event
-  Offline: "&c[Player] Is Offline." # [Player] -> Is Specified Player In Args[1]
-  Block: "&aBlocked [Player] From Events."
-  Unblock: "&aUnblocked [Player] From Events."
-  Blocked: "&cYou Can't Join Because You Are Blocked By An Administrator."
+messages:
+  noPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
+  alreadyStarted: "&cThere Is A Active Event."
+  noDescription: "&dA Normal Event Has Been Started. Use \"/Event Join\" To Participate."
+  eventEnd: "&dEvent Has Been Ended. No One Can Join Now."
+  noActiveEvent: "&cNo Events Are Currently Available."
+  bossbar: "&aJoin Now! &d[Desc]" # [Desc] -> Is a specific description of the event
+  offline: "&c[Player] Is Offline." # [Player] -> Is a specified player in args[1]
+  block: "&aBlocked [Player] From Events."
+  unblock: "&aUnblocked [Player] From Events."
+  blocked: "&cYou Can't Join Because You Are Blocked By An Administrator."
+  confirmation: "&dYou are about to [Action]. Are you sure??" # Action replaces by the action player is about to do -> closing events joining and etc.
 ## !!!! Visit https://github.com/Mehran1022mm/Event-Core/wiki For Gradient And Special Colors Usage !!!!
 
-Titles:
-  Title: "&cEvent Started!"
-  Subtitle: "&d/Event Join"
-  FadeIn: 10 # In Ticks
-  Stay: 20 # In Ticks
-  FadeOut: 10 # In Ticks
+titles: # 20 ticks = 1s
+  title: "&cEvent Started!"
+  subtitle: "&d/Event Join"
+  fade-in: 10 # In ticks
+  stay: 20 # In ticks
+  fade-out: 10 # In ticks

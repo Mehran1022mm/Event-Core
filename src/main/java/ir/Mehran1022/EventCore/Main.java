@@ -42,10 +42,19 @@ public final class Main extends JavaPlugin {
     }
 
     private void loadThings() {
-        Common.registerEvent(new PlayerJoinEvent(), this);
-        Common.registerCommand("event", new EventCommand());
         Common.registerEvent(new InventoryManager(), this);
+        Common.registerEvent(new PlayerJoinEvent(), this);
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Registered events");
+        }
+        Common.registerCommand("event", new EventCommand());
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Registered commands");
+        }
         Common.registerTabCompleter(new EventCommand(), "event");
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Registered tab completer");
+        }
 /*
         try {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
@@ -55,29 +64,49 @@ public final class Main extends JavaPlugin {
         }
 */
         economyPluginFound = setupEconomy();
-        UpdateManager.start();
+        if (ConfigManager.CHECKUPDATE) {
+            UpdateManager.start();
+            if (ConfigManager.DEBUG) {
+                Common.log("[Debug] Started update-checker worker");
+            }
+        }
         new Metrics(this, 18612);
     }
 
     @Override
     public void onDisable() {
         UpdateManager.stop();
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Stopped update-check worker");
+        }
     }
 
     private void loadPlayersData() {
         file = new File(getDataFolder(), "playersData.yml");
         if (!file.exists()) {
             saveResource("playersData.yml", false);
+            if (ConfigManager.DEBUG) {
+                Common.log("[Debug] Created playersData.yml");
+            }
         }
         playersData = YamlConfiguration.loadConfiguration(file);
+        if (ConfigManager.DEBUG) {
+            Common.log("[Debug] Assigned players data");
+        }
     }
 
     private boolean setupEconomy() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+            if (ConfigManager.DEBUG) {
+                Common.log("[Debug] Vault not found");
+            }
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
+            if (ConfigManager.DEBUG) {
+                Common.log("[Debug] Economy provider not found");
+            }
             return false;
         }
         econ = rsp.getProvider();

@@ -54,16 +54,15 @@ public final class InventoryManager implements Listener, InventoryHolder {
 
             String itemType = currentItem.getType().name();
 
-            if (event.getInventory().getHolder() != this) {
-                player.sendMessage("holder is " + event.getInventory().getHolder().toString());
-            }
-
             event.setCancelled(true);
             player.closeInventory();
 
             switch (itemType) {
                 case "EMERALD":
-                    Common.confirmation(player, ConfigManager.PREFIX + "You Are Going To Join An Event. Are you Sure??", "/event join");
+                    if (ConfigManager.DEBUG) {
+                        Common.log("[Debug] " + player.getName() + " clicked join button in the GUI");
+                    }
+                    Common.confirmation(player, ConfigManager.PREFIX + ConfigManager.CONFIRMATION.replace("[Action]", "join"), "/event join");
                     break;
                 case "EMERALD_BLOCK":
                 case "REDSTONE_BLOCK":
@@ -74,13 +73,22 @@ public final class InventoryManager implements Listener, InventoryHolder {
                     }
                     switch (itemType) {
                         case "EMERALD_BLOCK":
-                            Common.confirmation(player, ConfigManager.PREFIX + "You Are Going To Start An Event. Are you Sure??", "/event start");
+                            Common.confirmation(player, ConfigManager.PREFIX + ConfigManager.CONFIRMATION.replace("[Action]", "create an event"), "/event start");
+                            if (ConfigManager.DEBUG) {
+                                Common.log("[Debug] " + player.getName() + " clicked create button in the GUI");
+                            }
                             break;
                         case "REDSTONE_BLOCK":
-                            Common.confirmation(player, ConfigManager.PREFIX + "You Are Going To Close An Event. Are you Sure??", "/event end");
+                            Common.confirmation(player, ConfigManager.PREFIX + ConfigManager.CONFIRMATION.replace("[Action]", "close any open event"), "/event end");
+                            if (ConfigManager.DEBUG) {
+                                Common.log("[Debug] " + player.getName() + " clicked close button in the GUI");
+                            }
                             break;
                         case "GRINDSTONE":
-                            Common.confirmation(player, ConfigManager.PREFIX + "You Are Going To Reload The Plugin. Are you Sure??", "/event reload");
+                            Common.confirmation(player, ConfigManager.PREFIX + ConfigManager.CONFIRMATION.replace("[Action]", "reload the configurations"), "/event reload");
+                            if (ConfigManager.DEBUG) {
+                                Common.log("[Debug] " + player.getName() + " clicked reload button in the GUI");
+                            }
                             break;
                     }
                     break;
@@ -111,12 +119,12 @@ public final class InventoryManager implements Listener, InventoryHolder {
     }
 
     private void setAdminItems() {
-        inventory.setItem(20, createItemStack(Material.EMERALD_BLOCK, "&aStart", "&7Starts An Event With The Default Description."));
-        inventory.setItem(24, createItemStack(Material.REDSTONE_BLOCK, "&cEnd", "&7Closes The Active Event."));
-        inventory.setItem(31, createItemStack(Material.GRINDSTONE, "&dReload", "&7Reloads The Configuration Files."));
+        inventory.setItem(20, createItemStack(Material.EMERALD_BLOCK, "&aStart", "&7Starts an event with the default description."));
+        inventory.setItem(24, createItemStack(Material.REDSTONE_BLOCK, "&cEnd", "&7Closes the active event."));
+        inventory.setItem(31, createItemStack(Material.GRINDSTONE, "&dReload", "&7Reloads the configuration files."));
     }
 
     private void setPlayerItems() {
-        inventory.setItem(22, createItemStack(Material.EMERALD, "&aJoin", "&7Click To Join."));
+        inventory.setItem(22, createItemStack(Material.EMERALD, "&aJoin", "&7Click to join."));
     }
 }

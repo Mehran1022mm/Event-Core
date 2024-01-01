@@ -69,6 +69,9 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             InventoryManager inventoryManage = new InventoryManager();
 
             inventoryManage.openInventory(player, (player.hasPermission("eventcore.admin") ? InventoryManager.Role.ADMIN : InventoryManager.Role.PLAYER));
+            if (ConfigManager.DEBUG) {
+                Common.log("[Debug] Opened a GUI for " + player.getName());
+            }
 
             return true;
         }
@@ -142,11 +145,11 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelpMessage(CommandSender sender) {
-        String prefix = ConfigManager.PREFIX + (sender.hasPermission("eventcore.admin") ? Main.getInstance().getDescription().getVersion() : "v1.0.3 ");
+        String prefix = ConfigManager.PREFIX + "Event-Core v" + Main.getInstance().getDescription().getVersion();
         String[] messages = {
                 "   &a/Event &f- &cOpens " + (sender.hasPermission("eventcore.admin") ? "Admin" : "Player") + " Panel.",
-                "   &a/Event Help &f- &cSends Help Message.",
-                "   &a/Event Join &f- &cSends You To Events Server."
+                "   &a/Event Help &f- &cSends help Message.",
+                "   &a/Event Join &f- &cSends you to events server."
         };
         Common.sendMessage(sender, prefix);
         for (String message : messages) {
@@ -154,10 +157,10 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         }
         if (sender.hasPermission("eventcore.admin")) {
             String[] adminMessages = {
-                    "   &a/Event End &f- &cCloses Any Open Event.",
-                    "   &a/Event Reload &f- &cReloads Plugin Configuration File.",
-                    "   &a/Event Block <Player> &f- &cBlocks A Player.",
-                    "   &a/Event UnBlock <Player> &f- &cUnBlocks A Player."
+                    "   &a/Event End &f- &cCloses any open event.",
+                    "   &a/Event Reload &f- &cReloads plugin configuration files.",
+                    "   &a/Event Block <Player> &f- &cBlocks a player.",
+                    "   &a/Event UnBlock <Player> &f- &cUnBlocks a player."
             };
             for (String message : adminMessages) {
                 Common.sendMessage(sender, message);
@@ -170,15 +173,15 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         Active = true;
         Players.clear();
         String BossbarString = ConfigManager.BOSSBAR.replace("[Desc]", EventDesc);
-        bossBar = Bukkit.createBossBar(BossbarString, BarColor.RED, BarStyle.SOLID);
-        bossBar.setProgress(1.0);
+        bossBar = Bukkit.createBossBar(BossbarString, getRandomBarColor(), getRandomBarStyle());
         Bukkit.broadcastMessage(Common.color(ConfigManager.PREFIX + EventDesc));
 //        Common.sendMessageToBungee(ConfigManager.PREFIX + EventDesc);
         for (Player P : Bukkit.getOnlinePlayers()) {
             bossBar.addPlayer(P);
             P.sendTitle(Common.color(ConfigManager.TITLE), Common.color(ConfigManager.SUBTITLE), ConfigManager.FADEIN, ConfigManager.STAY, ConfigManager.FADEOUT);
         }
-        Common.sendActionBar((Player) sender, "&aSuccessfully Created An Event With Duration Of " + ConfigManager.DURATION + "Seconds.");
+
+        Common.sendActionBar((Player) sender, "&a&lSuccessfully Created An Event With Duration Of " + ConfigManager.DURATION + " Seconds.");
 
         new BukkitRunnable() {
             @Override
@@ -210,7 +213,7 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             Players.add(player);
             if (Main.economyPluginFound && ConfigManager.ENABLE_COST) {
                 EconomyResponse response = Main.getEconomy().withdrawPlayer(player, ConfigManager.COST);
-                Common.sendMessage(player, ConfigManager.PREFIX + "This Event Subtracted " + ConfigManager.COST.toString() + "$ From Your Money. You Have " + Main.getEconomy().format(response.balance) + "$ Now");
+                Common.sendMessage(player, ConfigManager.PREFIX + "This Event Subtracted " + ConfigManager.COST.toString() + "$ From Your Bank. You Have " + Main.getEconomy().format(response.balance) + "$ Now");
                 System.out.println("Withdrew " + ConfigManager.COST + " From " + player.getName());
             }
             Common.sendToAnotherServer(player, ConfigManager.SERVER_NAME);
@@ -296,5 +299,19 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
 
     private List<String> getPlayerNameSuggestions() {
         return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+    }
+
+    private BarColor getRandomBarColor() {
+        BarColor[] colors = BarColor.values();
+        Random random = new Random();
+        int index = random.nextInt(colors.length);
+        return colors[index];
+    }
+
+    private BarStyle getRandomBarStyle() {
+        BarStyle[] styles = BarStyle.values();
+        Random random = new Random();
+        int index = random.nextInt(styles.length);
+        return  styles[index];
     }
 }
