@@ -20,12 +20,12 @@ A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. Wit
 - [x] Add Gradient And Special Colors - 100%
 - [x] Add Auto Update System - 100%
 - [x] Create Bungeecord Addon & Add MultiServer Messaging - 100%
-- [x] InventoryClick Handler Error Fix
+- [x] InventoryClick Handler Error Fix - 100%
+- [ ] Config.yml optimization and Bossbar settings
 
 # ❓ Bungeecord addon is out of service for now.
 
 ### 🔗 Libraries
-- [InvUI](https://github.com/NichtStudioCode/InvUI)
 - [VaultAPI](https://github.com/MilkBowl/VaultAPI)
 - [IridiumColorAPI](https://github.com/Iridium-Development/IridiumColorAPI)
 
