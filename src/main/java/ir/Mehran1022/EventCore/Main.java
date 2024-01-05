@@ -1,11 +1,12 @@
-package ir.mehran1022.eventcore;
+package ir.Mehran1022.EventCore;
 
-import ir.mehran1022.eventcore.Commands.EventCommand;
-import ir.mehran1022.eventcore.Listeners.PlayerJoinEvent;
-import ir.mehran1022.eventcore.Managers.ConfigManager;
-import ir.mehran1022.eventcore.Managers.InventoryManager;
-import ir.mehran1022.eventcore.Managers.UpdateManager;
-import ir.mehran1022.eventcore.Utils.Common;
+
+import ir.Mehran1022.EventCore.Commands.EventCommand;
+import ir.Mehran1022.EventCore.Listeners.PlayerJoinEvent;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
+import ir.Mehran1022.EventCore.Managers.InventoryManager;
+import ir.Mehran1022.EventCore.Managers.UpdateManager;
+import ir.Mehran1022.EventCore.Utils.Common;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,14 +56,6 @@ public final class Main extends JavaPlugin {
         if (ConfigManager.DEBUG) {
             Common.log("[Debug] Registered tab completer");
         }
-/*
-        try {
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:message");
-        } catch (Exception e) {
-            Common.log("&cCannot register out-going channels: " + e.getMessage());
-        }
-*/
         economyPluginFound = setupEconomy();
         if (ConfigManager.CHECKUPDATE) {
             UpdateManager.start();

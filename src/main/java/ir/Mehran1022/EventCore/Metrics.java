@@ -1,4 +1,4 @@
-package ir.mehran1022.eventcore;
+package ir.Mehran1022.EventCore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

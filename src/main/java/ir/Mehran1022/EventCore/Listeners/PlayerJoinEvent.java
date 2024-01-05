@@ -1,9 +1,9 @@
-package ir.mehran1022.eventcore.Listeners;
+package ir.Mehran1022.EventCore.Listeners;
 
-import ir.mehran1022.eventcore.Main;
-import ir.mehran1022.eventcore.Managers.ConfigManager;
-import ir.mehran1022.eventcore.Utils.Common;
-import ir.mehran1022.eventcore.Commands.EventCommand;
+import ir.Mehran1022.EventCore.Commands.EventCommand;
+import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
+import ir.Mehran1022.EventCore.Utils.Common;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

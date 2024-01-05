@@ -1,7 +1,7 @@
-package ir.mehran1022.eventcore.Managers;
+package ir.Mehran1022.EventCore.Managers;
 
-import ir.mehran1022.eventcore.Main;
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Utils.Common;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public final class ConfigManager {

@@ -1,7 +1,7 @@
-package ir.mehran1022.eventcore.Utils;
+package ir.Mehran1022.EventCore.Utils;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
-import ir.mehran1022.eventcore.Main;
+import ir.Mehran1022.EventCore.Main;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Server;

@@ -22,12 +22,12 @@
                                         SOFTWARE.
 */
 
-package ir.mehran1022.eventcore.Commands;
+package ir.Mehran1022.EventCore.Commands;
 
-import ir.mehran1022.eventcore.Main;
-import ir.mehran1022.eventcore.Managers.ConfigManager;
-import ir.mehran1022.eventcore.Managers.InventoryManager;
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
+import ir.Mehran1022.EventCore.Managers.InventoryManager;
+import ir.Mehran1022.EventCore.Utils.Common;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
