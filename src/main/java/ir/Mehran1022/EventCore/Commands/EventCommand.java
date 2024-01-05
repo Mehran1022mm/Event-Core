@@ -55,7 +55,11 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     private static BossBar bossBar;
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(final @NotNull CommandSender sender, final Command command, final @NotNull String label, final String[] args) {
+        if (!(sender instanceof Player)) {
+            Common.sendMessage(sender, "Only Players Allowed.");
+            return true;
+        }
         if (!command.getName().equalsIgnoreCase("event")) {
             return true;
         }
@@ -72,60 +76,49 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             Common.logDebug("[Debug] Opened a GUI for " + player.getName());
             return true;
         }
-
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("eventcore.admin")) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+        switch(args[0]){
+            case "reload":{
+                if (!sender.hasPermission("eventcore.admin")) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+                    return true;
+                }
+                long start = System.currentTimeMillis();
+                ConfigManager.loadConfig();
+                long time = System.currentTimeMillis() - start;
+                Common.sendMessage(sender, ConfigManager.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
                 return true;
             }
-            long start = System.currentTimeMillis();
-            ConfigManager.loadConfig();
-            long time = System.currentTimeMillis() - start;
-            Common.sendMessage(sender, ConfigManager.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
-            return true;
-        }
-
-        if (!(sender instanceof Player)) {
-            Common.sendMessage(sender, "Only Players Allowed.");
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("help")) {
-            sendHelpMessage(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("start")) {
-            if (!sender.hasPermission("eventcore.admin")) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+            case "help":{
+                sendHelpMessage(sender);
                 return true;
             }
-            if (Active) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.ALREADY_STARTED);
+            case "start":{
+                if (!sender.hasPermission("eventcore.admin")) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+                    return true;
+                }
+                if (Active) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.ALREADY_STARTED);
+                    return true;
+                }
+                startEvent(sender, args);
+            }
+            case "join":{
+                handleJoinCommand(sender);
                 return true;
             }
-            startEvent(sender, args);
-        }
-
-
-        if (args[0].equalsIgnoreCase("join")) {
-            handleJoinCommand(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("end")) {
-            handleEndCommand(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("block")) {
-            handleBlockCommand(sender, args);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("unblock")) {
-            handleUnblockCommand(sender, args);
-            return true;
+            case "end":{
+                handleEndCommand(sender);
+                return true;
+            }
+            case "block":{
+                handleBlockCommand(sender, args);
+                return true;
+            }
+            case "unblock":{
+                handleUnblockCommand(sender, args);
+                return true;
+            }
         }
         return true;
     }
@@ -142,34 +135,32 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelpMessage(CommandSender sender) {
-        String prefix = ConfigManager.PREFIX + "Event-Core v" + Main.getInstance().getDescription().getVersion();
+        Common.sendMessage(sender, ConfigManager.PREFIX + "Event-Core v" + Main.getInstance().getDescription().getVersion());
         String[] messages = {
                 "   &a/Event &f- &cOpens " + (sender.hasPermission("eventcore.admin") ? "Admin" : "Player") + " Panel.",
                 "   &a/Event Help &f- &cSends help Message.",
                 "   &a/Event Join &f- &cSends you to events server."
         };
-        Common.sendMessage(sender, prefix);
-        for (String message : messages) {
-            Common.sendMessage(sender, message);
-        }
         if (sender.hasPermission("eventcore.admin")) {
-            String[] adminMessages = {
+            messages = new String[]{
+                    "   &a/Event &f- &cOpens " + (sender.hasPermission("eventcore.admin") ? "Admin" : "Player") + " Panel.",
+                    "   &a/Event Help &f- &cSends help Message.",
+                    "   &a/Event Join &f- &cSends you to events server.",
                     "   &a/Event End &f- &cCloses any open event.",
                     "   &a/Event Reload &f- &cReloads plugin configuration files.",
                     "   &a/Event Block <Player> &f- &cBlocks a player.",
                     "   &a/Event UnBlock <Player> &f- &cUnBlocks a player."
             };
-            for (String message : adminMessages) {
-                Common.sendMessage(sender, message);
-            }
         }
+        for (String message : messages)
+            Common.sendMessage(sender, message);
+
     }
 
     private void startEvent(CommandSender sender, String[] args) {
-        EventDesc = EventDesc = args.length >= 2 && args[1] != null ? String.join(" ", args).substring(6) : ConfigManager.NO_DESC;
         Active = true;
         Players.clear();
-        String BossbarString = ConfigManager.BOSSBAR.replace("[Desc]", EventDesc);
+        String BossbarString = ConfigManager.BOSSBAR.replace("[Desc]", args.length >= 2 && args[1] != null ? String.join(" ", args).substring(6) : ConfigManager.NO_DESC);
         bossBar = Bukkit.createBossBar(BossbarString, getRandomBarColor(), getRandomBarStyle());
         Bukkit.broadcastMessage(Common.color(ConfigManager.PREFIX + EventDesc));
 //        Common.sendMessageToBungee(ConfigManager.PREFIX + EventDesc);
@@ -194,19 +185,20 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleJoinCommand(CommandSender sender) {
+        Player player = (Player) sender;
         if (!Active) {
             Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_EVENT);
             return;
-        }
-        Player player = (Player) sender;
-        UUID uuid = player.getUniqueId();
-        if (Main.playersData.contains(uuid.toString()) && Objects.equals(Main.playersData.get(uuid.toString() + ".BANNED"), true)) {
+        } else if(Main.playersData.contains(player.getUniqueId().toString()) && Objects.equals(Main.playersData.get(player.getUniqueId().toString() + ".BANNED"), true)){
+            Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.BLOCKED);
+            return;
+        }else if (Main.playersData.contains(player.getUniqueId().toString()) && Objects.equals(Main.playersData.get(player.getUniqueId().toString() + ".BANNED"), true)) {
             Common.sendMessage(player, ConfigManager.PREFIX + ConfigManager.BLOCKED);
             return;
         }
-        if (Players.contains(player)) {
+        if (Players.contains(player))
             Common.sendMessage(player, ConfigManager.PREFIX + "&cAlready Connected.");
-        } else {
+         else {
             Players.add(player);
             if (Main.economyPluginFound && ConfigManager.ENABLE_COST) {
                 EconomyResponse response = Main.getEconomy().withdrawPlayer(player, ConfigManager.COST);
