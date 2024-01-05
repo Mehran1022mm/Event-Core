@@ -15,27 +15,20 @@ import java.util.concurrent.TimeUnit;
 
 public final class UpdateManager {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private static final String USER_AGENT = "SpigotPluginUpdater";
     private static final String RESOURCE_URL = "https://api.spigotmc.org/legacy/update.php?resource=%s";
     private static final String resourceId = "110088";
 
     public static void start() {
-        final Runnable updater = new Runnable() {
-            public void run() {
-                checkForUpdates();
-            }
-        };
+        final Runnable updater = UpdateManager::checkForUpdates;
         scheduler.scheduleAtFixedRate(updater, 0, 1, TimeUnit.HOURS);
     }
 
     private static void checkForUpdates() {
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Checking for updates.");
-        }
+        Common.logDebug("[Debug] Checking for updates.");
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(String.format(RESOURCE_URL, resourceId)).openConnection();
             connection.setRequestMethod("GET");
-            connection.addRequestProperty("User-Agent", USER_AGENT);
+            connection.addRequestProperty("User-Agent", "SpigotPluginUpdater");
             String latestVersion = new Scanner(connection.getInputStream()).nextLine();
             String currentVersion = Main.getInstance().getDescription().getVersion();
             if (!currentVersion.equals(latestVersion)) {
