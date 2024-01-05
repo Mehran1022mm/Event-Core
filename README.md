@@ -4,7 +4,9 @@
 </p>
 
 <h1 align="center">✨ Event-Core</h1>
-A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
+ This is a forked version from Event-Core made by mehran. you can check out their work.
+ this fork makes Event-Core more optimized, cleaned, and actually better.
+ Event core is a Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
 
 ### 💡 To Do List
 - [x] Add GUI Inventories - 100%
