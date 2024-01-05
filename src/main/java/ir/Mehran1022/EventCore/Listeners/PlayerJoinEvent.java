@@ -31,9 +31,7 @@ public final class PlayerJoinEvent implements Listener {
             e.printStackTrace();
         }
 
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Added " + player.getName() + " to playersData.yml (PlayerJoin)");
-        }
+        Common.logDebug("[Debug] Added " + player.getName() + " to playersData.yml (PlayerJoin)");
     }
 }
 

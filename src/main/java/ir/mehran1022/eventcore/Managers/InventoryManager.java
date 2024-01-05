@@ -1,6 +1,6 @@
-package ir.mehran1022.eventcore.Managers;
+package ir.Mehran1022.EventCore.Managers;
 
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.Mehran1022.EventCore.Utils.Common;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

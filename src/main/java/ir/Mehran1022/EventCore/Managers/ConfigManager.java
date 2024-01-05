@@ -2,67 +2,34 @@ package ir.Mehran1022.EventCore.Managers;
 
 import ir.Mehran1022.EventCore.Main;
 import ir.Mehran1022.EventCore.Utils.Common;
+import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public final class ConfigManager {
+@UtilityClass
+public class ConfigManager {
 
-    public static String PREFIX;
+    public String PREFIX, ALREADY_STARTED, NO_PERMISSION, NO_DESC, END, NO_EVENT, SERVER_NAME;
+    public Integer DURATION, FADEIN, STAY, FADEOUT;
+    public String BOSSBAR, TITLE, SUBTITLE;
+    public boolean ENABLE_COST, AUTOUPDATE, CHECKUPDATE, DEBUG;
+    public Double COST;
+    public String OFFLINE, BLOCK, BLOCKED, UNBLOCK, CONFIRMATION;
 
-    public static String ALREADY_STARTED;
+    /**
+     * Loads the configuration settings.
+     */
+    public void loadConfig() {
+        // Reload the configuration
+        Main.getInstance().reloadConfig();
 
-    public static String NO_PERMISSION;
+        final FileConfiguration config = Main.getInstance().getConfig();
 
-    public static String NO_DESC;
-
-    public static String END;
-
-    public static String NO_EVENT;
-
-    public static String SERVER_NAME;
-
-    public static Integer DURATION;
-
-    public static String BOSSBAR;
-
-    public static String TITLE;
-
-    public static String SUBTITLE;
-
-    public static Integer FADEIN;
-
-    public static Integer STAY;
-
-    public static Integer FADEOUT;
-
-    public static  boolean ENABLE_COST;
-
-    public static Double COST;
-
-    public static String OFFLINE;
-
-    public static String BLOCK;
-
-    public static String BLOCKED;
-
-    public static String UNBLOCK;
-
-    public static boolean AUTOUPDATE;
-
-    public static boolean CHECKUPDATE;
-
-    public static boolean DEBUG;
-
-    public static String CONFIRMATION;
-
-    public static void loadConfig() {
-        Main instance = Main.getInstance();
-        instance.reloadConfig();
-        FileConfiguration config = instance.getConfig();
-
+        // Log debug message if debug mode is enabled
         if (ConfigManager.DEBUG) {
             Common.log("[Debug] Loaded config.yml");
         }
 
+        // Load the configuration values into variables
         PREFIX = Common.color(config.getString("prefix") + " ");
         ALREADY_STARTED = Common.color(config.getString("messages.alreadyStarted"));
         NO_PERMISSION = Common.color(config.getString("messages.noPermission"));
@@ -86,6 +53,5 @@ public final class ConfigManager {
         CHECKUPDATE = config.getBoolean("update-check");
         DEBUG = config.getBoolean("debug-mode");
         CONFIRMATION = config.getString("messages.confirmation");
-
     }
 }

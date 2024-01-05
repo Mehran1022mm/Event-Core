@@ -2,9 +2,13 @@ package ir.Mehran1022.EventCore.Utils;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import ir.Mehran1022.EventCore.Main;
+import ir.Mehran1022.EventCore.Managers.ConfigManager;
+import lombok.experimental.UtilityClass;
+import lombok.val;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -17,109 +21,149 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Objects;
 
+@UtilityClass
 @SuppressWarnings("Deprecation")
 public final class Common {
-    private static final Main mainInstance = Main.getInstance();
-    private static final Server server = mainInstance.getServer();
-    private static final PluginManager pluginManager = server.getPluginManager();
-//    private static final BanList banList = Bukkit.getBanList(BanList.Type.NAME);
+    private final Main mainInstance = Main.getInstance();
+    private final Server server = mainInstance.getServer();
+    private final PluginManager pluginManager = server.getPluginManager();
 
-    public static String color(String message) {
+    public String color(String message) {
         return IridiumColorAPI.process(message);
     }
 
-/*
-    public static List<String> color(List<String> messages) {
-        return IridiumColorAPI.process(messages);
+    /**
+     * Logs a message to the console.
+     *
+     * @param  message  the message to be logged
+     */
+    public void log(String message) {
+        server.getConsoleSender().sendMessage(String.format("[Event-Core] %s", color(message)));
     }
-*/
-
-    public static void log(String message) {
-        server.getConsoleSender().sendMessage("[Event-Core] " + color(message));
+    /**
+     * Logs a debug message.
+     *
+     * @param  message  the message to be logged
+     */
+    public void logDebug(String message) {
+        if(ConfigManager.DEBUG)
+            return;
+        server.getConsoleSender().sendMessage(String.format("[Event-Core] %s", color(message)));
     }
 
-    public static void registerEvent(Listener listenerClass, Plugin pluginClass) {
+    /**
+     * Registers an event listener with the plugin manager.
+     *
+     * @param listenerClass The listener class to register.
+     * @param pluginClass The plugin class to register.
+     */
+    public void registerEvent(Listener listenerClass, Plugin pluginClass) {
         pluginManager.registerEvents(listenerClass, pluginClass);
     }
 
-    public static void registerCommand(String commandName, CommandExecutor commandClass) {
+    /**
+     * Registers a command with the given name and command executor.
+     *
+     * @param commandName The name of the command to register.
+     * @param commandClass The command executor to associate with the command.
+     */
+    public void registerCommand(String commandName, CommandExecutor commandClass) {
+        // Retrieve the command from the main instance using the command name
         Objects.requireNonNull(mainInstance.getCommand(commandName)).setExecutor(commandClass);
     }
 
-    public static void registerTabCompleter(TabCompleter tabCompleterClass, String commandName) {
+    /**
+     * Registers a TabCompleter for a command.
+     *
+     * @param tabCompleterClass The TabCompleter class to register.
+     * @param commandName The name of the command.
+     */
+    public void registerTabCompleter(TabCompleter tabCompleterClass, String commandName) {
         Objects.requireNonNull(mainInstance.getCommand(commandName)).setTabCompleter(tabCompleterClass);
     }
 
-    public static void sendMessage(CommandSender player, String message) {
+    /**
+     * Sends a message to a command sender.
+     *
+     * @param player   the command sender to send the message to
+     * @param message  the message to send
+     */
+    public void sendMessage(CommandSender player, String message) {
         player.sendMessage(color(message));
     }
 
-/*
-    public static void ban(Player player, String reason) {
-        String userName = player.getName();
-        String coloredReason = color(reason);
-        banList.addBan(userName, coloredReason, null, "Administrator");
-        player.kickPlayer(coloredReason);
-    }
-*/
-
-/*
-    public static void freeze(Player player, boolean clearInventory) {
-        player.setWalkSpeed(0f);
-        player.setFlySpeed(0f);
-        player.setAllowFlight(false);
-        player.setCollidable(false);
-        if (clearInventory) {
-            player.getInventory().clear();
-        }
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0));
-    }
-*/
-
-/*
-    public static void unFreeze(Player player) {
-        player.setWalkSpeed(0.2f);
-        player.setFlySpeed(0.2f);
-        player.setAllowFlight(true);
-        player.setCollidable(true);
-        player.removePotionEffect(PotionEffectType.BLINDNESS);
-    }
-*/
-
-    public static void sendActionBar(Player player, String message) {
+    /**
+     * Sends an action bar message to a player.
+     *
+     * @param  player   the player to send the action bar message to
+     * @param  message  the message to be sent
+     */
+    public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(color(message)));
     }
 
-    public static void sendToAnotherServer(Player player, String serverName) {
+    /**
+     * Sends the player to another server.
+     *
+     * @param player     The player to send.
+     * @param serverName The name of the server to connect to.
+     */
+    public void sendToAnotherServer(Player player, String serverName) {
         try (ByteArrayOutputStream b = new ByteArrayOutputStream();
              DataOutputStream out = new DataOutputStream(b)) {
+
+            // Write the command and server name to the output stream
             out.writeUTF("Connect");
             out.writeUTF(serverName);
+
+            // Send the plugin message to the player
             player.sendPluginMessage(mainInstance, "EventCore", b.toByteArray());
         } catch (Exception e) {
+
+            // Display error message to player
             sendMessage(player, "&cError When Trying To Send You To " + serverName);
+
+            // Print the stack trace for debugging purposes
             e.printStackTrace();
         }
     }
 
-    public static void sendMessageToBungee(String message) {
+    /**
+     * Sends a message to the Bungee server.
+     *
+     * @param message The message to send.
+     */
+    public void sendMessageToBungee(String message) {
         try (ByteArrayOutputStream b = new ByteArrayOutputStream();
              DataOutputStream out = new DataOutputStream(b)) {
-            out.writeUTF(color(message));
-            server.sendPluginMessage(mainInstance, "EventCoreMessage", b.toByteArray());
+            out.writeUTF(color(message)); // Convert the message to colored text
+            server.sendPluginMessage(mainInstance, "EventCoreMessage", b.toByteArray()); // Send the message to the Bungee server
         } catch (Exception e) {
-            log("&cError When Trying To Send Message To Bungee");
-            e.printStackTrace();
+            log("&cError When Trying To Send Message To Bungee"); // Log an error message
+            e.printStackTrace(); // Print the stack trace of the exception
         }
     }
 
-    public static void confirmation(Player player, String message, String command) {
-        TextComponent confirm = new TextComponent(color(" &a[✔]"));
+    /**
+     * Sends a confirmation message to the player with a clickable text component.
+     *
+     * @param player  The player to send the confirmation message to.
+     * @param message The message to display before the confirmation text.
+     * @param command The command to execute when the confirmation text is clicked.
+     */
+    public void confirmation(Player player, String message, String command) {
+        // Create the confirmation text component
+        val confirm = new TextComponent(color(" &a[✔]"));
+
+        // Set the hover event for the confirmation text
         confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click To Confirm.").create()));
+
+        // Set the click event for the confirmation text
         confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-        BaseComponent[] text = new ComponentBuilder("").append(message)
+
+        // Send the message to the player
+        player.spigot().sendMessage(new ComponentBuilder("").append(message)
                 .append(confirm)
-                .create();
-        player.spigot().sendMessage(text);
+                .create());
     }
 }

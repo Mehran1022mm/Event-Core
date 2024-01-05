@@ -69,10 +69,7 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             InventoryManager inventoryManage = new InventoryManager();
 
             inventoryManage.openInventory(player, (player.hasPermission("eventcore.admin") ? InventoryManager.Role.ADMIN : InventoryManager.Role.PLAYER));
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Opened a GUI for " + player.getName());
-            }
-
+            Common.logDebug("[Debug] Opened a GUI for " + player.getName());
             return true;
         }
 
