@@ -7,8 +7,8 @@
 A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
 
 ### 💡 To-Do List - 2024
-- [] Bungeecord broadcasting
-- [] Reminder
+- [ ] Bungeecord broadcasting
+- [ ] Reminder
 
 ### 🔗 Libraries
 - [VaultAPI](https://github.com/MilkBowl/VaultAPI)
