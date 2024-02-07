@@ -6,28 +6,16 @@
 <h1 align="center">✨ Event-Core</h1>
 A Minecraft Core Plugin That Helps You Create And Announce Minecraft Events. With Bungeecord Servers Support. Built For SpigotMC 1.14-1.19.4
 
-### 💡 To Do List
-- [x] Add GUI Inventories - 100%
-- [x] Add Tab Completor - 100%
-- [x] Add [Bstats](https://bstats.org/plugin/bukkit/Event-Core/18612) Support - 100%
-- [x] Add Confirmation System - 100%
-- [x] Add Title - 100%
-- [x] Add `/Event Help` Command - 100%
-- [x] Update TabCompleter - 100%
-- [x] Add Costs For Join -100%
-- [x] Update Wiki Pages - 100%
-- [x] Add Block System - 100%
-- [x] Add Gradient And Special Colors - 100%
-- [x] Add Auto Update System - 100%
-- [x] Create Bungeecord Addon & Add MultiServer Messaging - 100%
-- [x] InventoryClick Handler Error Fix - 100%
-- [ ] Config.yml optimization and Bossbar settings
-
-# ❓ Bungeecord addon is out of service for now.
+### 💡 To-Do List - 2024
+- [] Bungeecord broadcasting
+- [] Reminder
 
 ### 🔗 Libraries
 - [VaultAPI](https://github.com/MilkBowl/VaultAPI)
 - [IridiumColorAPI](https://github.com/Iridium-Development/IridiumColorAPI)
+- Lombok
+- Json
+- JetBrains Annotations
 
 ```
 - This application is under MIT License & you cant resell this plugin -
