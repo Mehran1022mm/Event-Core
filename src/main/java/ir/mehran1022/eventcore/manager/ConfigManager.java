@@ -1,63 +1,24 @@
-package ir.mehran1022.eventcore.Managers;
+package ir.mehran1022.eventcore.manager;
 
 import ir.mehran1022.eventcore.Main;
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.mehran1022.eventcore.util.Common;
+import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.file.FileConfiguration;
 
+@UtilityClass
 public final class ConfigManager {
 
-    public static String PREFIX;
-
-    public static String ALREADY_STARTED;
-
-    public static String NO_PERMISSION;
-
-    public static String NO_DESC;
-
-    public static String END;
-
-    public static String NO_EVENT;
-
-    public static String SERVER_NAME;
-
-    public static Integer DURATION;
-
-    public static String BOSSBAR;
-
-    public static String TITLE;
-
-    public static String SUBTITLE;
-
-    public static Integer FADEIN;
-
-    public static Integer STAY;
-
-    public static Integer FADEOUT;
-
-    public static  boolean ENABLE_COST;
-
-    public static Double COST;
-
-    public static String OFFLINE;
-
-    public static String BLOCK;
-
-    public static String BLOCKED;
-
-    public static String UNBLOCK;
-
-    public static boolean AUTOUPDATE;
-
-    public static boolean CHECKUPDATE;
-
-    public static boolean DEBUG;
-
-    public static String CONFIRMATION;
+    public String PREFIX, ALREADY_STARTED, NO_PERMISSION, NO_DESC, END, NO_EVENT, SERVER_NAME;
+    public Integer DURATION, FADEIN, STAY, FADEOUT;
+    public String BOSSBAR, TITLE, SUBTITLE;
+    public boolean ENABLE_COST, AUTOUPDATE, CHECKUPDATE, DEBUG, BUNGEECORD;
+    public Double COST;
+    public String OFFLINE, BLOCK, BLOCKED, UNBLOCK, CONFIRMATION;
 
     public static void loadConfig() {
         Main instance = Main.getInstance();
         instance.reloadConfig();
-        FileConfiguration config = instance.getConfig();
+        final FileConfiguration config = instance.getConfig();
 
         if (ConfigManager.DEBUG) {
             Common.log("[Debug] Loaded config.yml");
@@ -86,6 +47,6 @@ public final class ConfigManager {
         CHECKUPDATE = config.getBoolean("update-check");
         DEBUG = config.getBoolean("debug-mode");
         CONFIRMATION = config.getString("messages.confirmation");
-
+        BUNGEECORD = config.getBoolean("bungeecord");
     }
 }

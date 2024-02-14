@@ -1,11 +1,13 @@
 package ir.mehran1022.eventcore;
 
-import ir.mehran1022.eventcore.Commands.EventCommand;
-import ir.mehran1022.eventcore.Listeners.PlayerJoinEvent;
-import ir.mehran1022.eventcore.Managers.ConfigManager;
-import ir.mehran1022.eventcore.Managers.InventoryManager;
-import ir.mehran1022.eventcore.Managers.UpdateManager;
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.mehran1022.eventcore.command.EventCommand;
+import ir.mehran1022.eventcore.listener.PlayerJoinEvent;
+import ir.mehran1022.eventcore.manager.CommunicationManager;
+import ir.mehran1022.eventcore.manager.ConfigManager;
+import ir.mehran1022.eventcore.manager.InventoryManager;
+import ir.mehran1022.eventcore.manager.UpdateManager;
+import ir.mehran1022.eventcore.util.Common;
+import lombok.val;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,84 +31,66 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
         ConfigManager.loadConfig();
         loadPlayersData();
-        if (!economyPluginFound) {
-            if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-                Common.log("&cCan't Use Cost Feature. Vault Not Found.");
+        val vaultPlugin = Bukkit.getPluginManager().getPlugin("Vault");
+        if (!economyPluginFound && vaultPlugin != null) {
+            Common.debug("[Debug] use cost feature. I couldn't find Vault.");
             } else {
-                Common.log("&cCan't Use Cost Feature. Failed To Get Economy Plugin.");
-                getConfig().set("Cost.Enabled", false);
-            }
+            Common.debug("[Debug] Can't use cost feature. Failed to get economy plugin.");
+            getConfig().set("Cost.Enabled", false);
         }
         loadThings();
-        Common.log("&eBungeecord addon is disabled in this version because of major bugs. We recommend to remove it from your bungeecord server until we fix it!");
     }
 
     private void loadThings() {
         Common.registerEvent(new InventoryManager(), this);
         Common.registerEvent(new PlayerJoinEvent(), this);
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Registered events");
-        }
+        Common.debug("[Debug] Registered events");
         Common.registerCommand("event", new EventCommand());
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Registered commands");
-        }
+        Common.debug("[Debug] Registered commands");
         Common.registerTabCompleter(new EventCommand(), "event");
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Registered tab completer");
-        }
-/*
-        try {
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:eventcore");
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "event-core:message");
-        } catch (Exception e) {
-            Common.log("&cCannot register out-going channels: " + e.getMessage());
-        }
-*/
+        Common.debug("[Debug] Registered tab completer");
         economyPluginFound = setupEconomy();
         if (ConfigManager.CHECKUPDATE) {
             UpdateManager.start();
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Started update-checker worker");
-            }
+            Common.debug("[Debug] Started update-checker worker");
+        }
+        if (ConfigManager.BUNGEECORD) {
+            setupChannel();
+            Common.debug("[Debug] Setup channel successful");
         }
         new Metrics(this, 18612);
+    }
+
+    public void setupChannel() {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "Event-Core");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "Event-Core", new CommunicationManager());
+        CommunicationManager.sendSyncRequest();
     }
 
     @Override
     public void onDisable() {
         UpdateManager.stop();
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Stopped update-check worker");
-        }
+        Common.debug("[Debug] Stopped update-check worker");
     }
 
     private void loadPlayersData() {
         file = new File(getDataFolder(), "playersData.yml");
         if (!file.exists()) {
             saveResource("playersData.yml", false);
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Created playersData.yml");
-            }
+            Common.debug("[Debug] Created playersData.yml");
         }
         playersData = YamlConfiguration.loadConfiguration(file);
-        if (ConfigManager.DEBUG) {
-            Common.log("[Debug] Assigned players data");
-        }
+        Common.debug("[Debug] Assigned players data");
     }
 
     private boolean setupEconomy() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Vault not found");
-            }
+            Common.debug("[Debug] Vault not found.");
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
+        final RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Economy provider not found");
-            }
+            Common.debug("[Debug] Economy provider not found.");
             return false;
         }
         econ = rsp.getProvider();

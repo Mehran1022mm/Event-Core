@@ -22,12 +22,13 @@
                                         SOFTWARE.
 */
 
-package ir.mehran1022.eventcore.Commands;
+package ir.mehran1022.eventcore.command;
 
 import ir.mehran1022.eventcore.Main;
-import ir.mehran1022.eventcore.Managers.ConfigManager;
-import ir.mehran1022.eventcore.Managers.InventoryManager;
-import ir.mehran1022.eventcore.Utils.Common;
+import ir.mehran1022.eventcore.manager.CommunicationManager;
+import ir.mehran1022.eventcore.manager.ConfigManager;
+import ir.mehran1022.eventcore.manager.InventoryManager;
+import ir.mehran1022.eventcore.util.Common;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -64,78 +65,66 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             if (!(sender instanceof Player)) {
                 return true;
             }
-
-            Player player = (Player) sender;
-            InventoryManager inventoryManage = new InventoryManager();
-
-            inventoryManage.openInventory(player, (player.hasPermission("eventcore.admin") ? InventoryManager.Role.ADMIN : InventoryManager.Role.PLAYER));
-            if (ConfigManager.DEBUG) {
-                Common.log("[Debug] Opened a GUI for " + player.getName());
-            }
-
+            final Player player = (Player) sender;
+            new InventoryManager().openInventory(player, (player.hasPermission("eventcore.admin") ? InventoryManager.Role.ADMIN : InventoryManager.Role.PLAYER));
+            Common.debug("[Debug] Opened a GUI for " + player.getName());
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("eventcore.admin")) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+        switch (args[0].toLowerCase()) {
+            case "reload" -> {
+                if (!sender.hasPermission("eventcore.admin")) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+                    return true;
+                }
+                final long start = System.currentTimeMillis();
+                ConfigManager.loadConfig();
+                Common.sendMessage(sender, ConfigManager.PREFIX + "&aTook &c" + (System.currentTimeMillis() - start) + "ms &aTo Reload.");
                 return true;
             }
-            long start = System.currentTimeMillis();
-            ConfigManager.loadConfig();
-            long time = System.currentTimeMillis() - start;
-            Common.sendMessage(sender, ConfigManager.PREFIX + "&aTook &c" + time + "ms &aTo Reload.");
-            return true;
-        }
-
-        if (!(sender instanceof Player)) {
-            Common.sendMessage(sender, "Only Players Allowed.");
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("help")) {
-            sendHelpMessage(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("start")) {
-            if (!sender.hasPermission("eventcore.admin")) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+            case "sync" -> {
+                handleSync(sender);
                 return true;
             }
-            if (Active) {
-                Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.ALREADY_STARTED);
+            case "help" -> {
+                sendHelpMessage(sender);
                 return true;
             }
-            startEvent(sender, args);
-        }
-
-
-        if (args[0].equalsIgnoreCase("join")) {
-            handleJoinCommand(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("end")) {
-            handleEndCommand(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("block")) {
-            handleBlockCommand(sender, args);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("unblock")) {
-            handleUnblockCommand(sender, args);
-            return true;
+            case "start" -> {
+                if (!sender.hasPermission("eventcore.admin")) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+                    return true;
+                }
+                if (Active) {
+                    Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.ALREADY_STARTED);
+                    return true;
+                }
+                startEvent(sender, args);
+                return true;
+            }
+            case "join" -> {
+                handleJoinCommand(sender);
+                return true;
+            }
+            case "end" -> {
+                handleEndCommand(sender);
+                return true;
+            }
+            case "block" -> {
+                handleBlockCommand(sender, args);
+                return true;
+            }
+            case "unblock" -> {
+                handleUnblockCommand(sender, args);
+                return true;
+            }
         }
         return true;
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
-        List<String> suggestions = new ArrayList<>();
+        final List<String> suggestions = new ArrayList<>();
         if (args.length == 1) {
             suggestions.addAll(getCommandSuggestions(sender));
         } else if (args.length == 2 && (args[1].equalsIgnoreCase("Block") || args[1].equalsIgnoreCase("UnBlock")) && sender.hasPermission("eventcore.admin")) {
@@ -145,6 +134,9 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelpMessage(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            Common.sendMessage(sender, "&cOnly Players Allowed.");
+        }
         String prefix = ConfigManager.PREFIX + "Event-Core v" + Main.getInstance().getDescription().getVersion();
         String[] messages = {
                 "   &a/Event &f- &cOpens " + (sender.hasPermission("eventcore.admin") ? "Admin" : "Player") + " Panel.",
@@ -155,12 +147,14 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         for (String message : messages) {
             Common.sendMessage(sender, message);
         }
+
         if (sender.hasPermission("eventcore.admin")) {
             String[] adminMessages = {
                     "   &a/Event End &f- &cCloses any open event.",
                     "   &a/Event Reload &f- &cReloads plugin configuration files.",
                     "   &a/Event Block <Player> &f- &cBlocks a player.",
-                    "   &a/Event UnBlock <Player> &f- &cUnBlocks a player."
+                    "   &a/Event UnBlock <Player> &f- &cUnBlocks a player.",
+                    "   &a/Event Sync &f- &cSync bungeecord."
             };
             for (String message : adminMessages) {
                 Common.sendMessage(sender, message);
@@ -169,20 +163,19 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void startEvent(CommandSender sender, String[] args) {
-        EventDesc = EventDesc = args.length >= 2 && args[1] != null ? String.join(" ", args).substring(6) : ConfigManager.NO_DESC;
+        EventDesc = args.length >= 2 && args[1] != null ? String.join(" ", args).substring(6) : ConfigManager.NO_DESC;
         Active = true;
         Players.clear();
-        String BossbarString = ConfigManager.BOSSBAR.replace("[Desc]", EventDesc);
-        bossBar = Bukkit.createBossBar(BossbarString, getRandomBarColor(), getRandomBarStyle());
+        bossBar = Bukkit.createBossBar(ConfigManager.BOSSBAR.replace("[Desc]", EventDesc), getRandomBarColor(), getRandomBarStyle());
         Bukkit.broadcastMessage(Common.color(ConfigManager.PREFIX + EventDesc));
-//        Common.sendMessageToBungee(ConfigManager.PREFIX + EventDesc);
+        if (ConfigManager.BUNGEECORD && CommunicationManager.isSynced()) {
+            CommunicationManager.sendBroadcastToBungee(Common.color(ConfigManager.PREFIX + EventDesc));
+        }
         for (Player P : Bukkit.getOnlinePlayers()) {
             bossBar.addPlayer(P);
             P.sendTitle(Common.color(ConfigManager.TITLE), Common.color(ConfigManager.SUBTITLE), ConfigManager.FADEIN, ConfigManager.STAY, ConfigManager.FADEOUT);
         }
-
         Common.sendActionBar((Player) sender, "&a&lSuccessfully Created An Event With Duration Of " + ConfigManager.DURATION + " Seconds.");
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -197,13 +190,17 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleJoinCommand(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            Common.sendMessage(sender, "&cOnly Players Allowed.");
+        }
         if (!Active) {
             Common.sendMessage(sender, ConfigManager.PREFIX + ConfigManager.NO_EVENT);
             return;
         }
+        assert sender instanceof Player;
         Player player = (Player) sender;
         UUID uuid = player.getUniqueId();
-        if (Main.playersData.contains(uuid.toString()) && Objects.equals(Main.playersData.get(uuid.toString() + ".BANNED"), true)) {
+        if (Main.playersData.contains(uuid.toString()) && Objects.equals(Main.playersData.get(uuid + ".BANNED"), true)) {
             Common.sendMessage(player, ConfigManager.PREFIX + ConfigManager.BLOCKED);
             return;
         }
@@ -213,10 +210,10 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
             Players.add(player);
             if (Main.economyPluginFound && ConfigManager.ENABLE_COST) {
                 EconomyResponse response = Main.getEconomy().withdrawPlayer(player, ConfigManager.COST);
-                Common.sendMessage(player, ConfigManager.PREFIX + "This Event Subtracted " + ConfigManager.COST.toString() + "$ From Your Bank. You Have " + Main.getEconomy().format(response.balance) + "$ Now");
-                System.out.println("Withdrew " + ConfigManager.COST + " From " + player.getName());
+                Common.sendMessage(player, ConfigManager.PREFIX + "This Event Subtracted " + ConfigManager.COST.toString() + "$ From Your Bank. You Have " + Main.getEconomy().format(Main.getEconomy().withdrawPlayer(player, ConfigManager.COST).balance) + "$ Now");
+                Common.debug("Withdrew " + ConfigManager.COST + " From " + player.getName());
             }
-            Common.sendToAnotherServer(player, ConfigManager.SERVER_NAME);
+            CommunicationManager.sendToAnotherServer(player, ConfigManager.SERVER_NAME);
             Bukkit.broadcastMessage(Common.color(ConfigManager.PREFIX + "&b" + player.getName() + "&f Has Joined The Event."));
         }
     }
@@ -245,21 +242,20 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         if (args[1].length() < 1) {
             return;
         }
-        Player player = Bukkit.getPlayer(args[1]);
+        final Player player = Bukkit.getPlayer(args[1]);
         if (player == null) {
             Common.sendMessage(sender, ConfigManager.PREFIX + (ConfigManager.OFFLINE).replace("[Player]", args[1]));
             return;
         }
-        String playerName = player.getName();
         UUID uuid = player.getUniqueId();
         if (Main.playersData.contains(uuid.toString())) {
-            Main.playersData.set(uuid.toString() + ".BANNED", true);
+            Main.playersData.set(uuid + ".BANNED", true);
             try {
                 Main.playersData.save(Main.file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Common.sendMessage(sender, ConfigManager.PREFIX + (ConfigManager.BLOCK).replace("[Player]", playerName));
+            Common.sendMessage(sender, ConfigManager.PREFIX + (ConfigManager.BLOCK).replace("[Player]", player.getName()));
         }
     }
 
@@ -279,7 +275,7 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         String playerName = player.getName();
         UUID uuid = player.getUniqueId();
         if (Main.playersData.contains(uuid.toString())) {
-            Main.playersData.set(uuid.toString() + ".BANNED", false);
+            Main.playersData.set(uuid + ".BANNED", false);
             try {
                 Main.playersData.save(Main.file);
             } catch (IOException e) {
@@ -289,10 +285,21 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void handleSync(CommandSender sender) {
+        if (!sender.hasPermission("eventcore.admin")) {
+            sender.sendMessage(ConfigManager.PREFIX + ConfigManager.NO_PERMISSION);
+            return;
+        }
+        if (!ConfigManager.BUNGEECORD) {
+            sender.sendMessage(ConfigManager.PREFIX + Common.color("&cYou can't sync because Bungeecord is turned off. Contact your server administrator."));
+        }
+        CommunicationManager.sendSyncRequest();
+    }
+
     private List<String> getCommandSuggestions(CommandSender sender) {
-        List<String> commands = new ArrayList<>(Arrays.asList("Join", "Help"));
+        final List<String> commands = new ArrayList<>(Arrays.asList("join", "help"));
         if (sender.hasPermission("eventcore.admin")) {
-            commands.addAll(Arrays.asList("End", "Start", "Block", "UnBlock", "Reload"));
+            commands.addAll(Arrays.asList("sync", "end", "start", "block", "unblock", "reload"));
         }
         return commands;
     }
@@ -302,16 +309,12 @@ public final class EventCommand implements CommandExecutor, TabCompleter {
     }
 
     private BarColor getRandomBarColor() {
-        BarColor[] colors = BarColor.values();
-        Random random = new Random();
-        int index = random.nextInt(colors.length);
-        return colors[index];
+        final BarColor[] colors = BarColor.values();
+        return colors[new Random().nextInt(colors.length)];
     }
 
     private BarStyle getRandomBarStyle() {
-        BarStyle[] styles = BarStyle.values();
-        Random random = new Random();
-        int index = random.nextInt(styles.length);
-        return  styles[index];
+        final BarStyle[] styles = BarStyle.values();
+        return  styles[new Random().nextInt(styles.length)];
     }
 }

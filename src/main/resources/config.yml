@@ -1,6 +1,7 @@
 update-check: true # Checks for available update
-debug-mode: false # Significant for troubleshot
+debug-mode: ture # Significant for troubleshot
 prefix: "&a&l☘ &2Event &7»&r" # Plugin main prefix - space automatically applies
+bungeecord: false
 event-server: "event" # Your bungeecord event server name
 duration: 300 # Events duration in seconds
 cost: # Withdraw money from players on joining
@@ -9,7 +10,7 @@ cost: # Withdraw money from players on joining
 
 ## !!!! Visit https://github.com/Mehran1022mm/Event-Core/wiki For Gradient And Special Colors Usage !!!!
 messages:
-  noPermission: "&cYou Dont Have Enough Permissions." # eventcore.admin
+  noPermission: "&cYou Don't Have Enough Permissions." # eventcore.admin
   alreadyStarted: "&cThere Is A Active Event."
   noDescription: "&dA Normal Event Has Been Started. Use \"/Event Join\" To Participate."
   eventEnd: "&dEvent Has Been Ended. No One Can Join Now."
